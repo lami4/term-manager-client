@@ -40,9 +40,9 @@
     </DialogBox>
     <DialogBox ref="addTermDialogbox" title="Add Term" htmlId="add-term-dialog-box">
       <div v-if="columns" slot="dialogbox-body">
-        <label v-for="column in columns" :for="column.html_id"  class="inp" v-bind:key="column.id">
-        <input type="text" :id="column.html_id" placeholder=" ">
-          <span class="label">{{ column.column_name }}</span>
+        <label v-for="column in columns" :for="column.htmlId"  class="inp" v-bind:key="column.id">
+        <input type="text" :id="column.htmlId" placeholder=" ">
+          <span class="label">{{ column.columnName }}</span>
           <span class="focus-bg"></span>
         </label>
       </div>
@@ -53,9 +53,9 @@
     </DialogBox>
     <DialogBox ref="editTermDialogbox" title="Edit Term" htmlId="edit-term-dialog-box">
       <div v-if="columns" slot="dialogbox-body">
-        <label v-for="column in columns" :for="column.html_id"  class="inp" v-bind:key="column.id">
-        <input type="text" :id="column.html_id" placeholder=" ">
-          <span class="label">{{ column.column_name }}</span>
+        <label v-for="column in columns" :for="column.htmlId"  class="inp" v-bind:key="column.id">
+        <input type="text" :id="column.htmlId" placeholder=" ">
+          <span class="label">{{ column.columnName }}</span>
           <span class="focus-bg"></span>
         </label>
       </div>
@@ -71,9 +71,9 @@
 import DialogBox from "./DialogBox.vue";
 import TermGrid from "./TermGrid.vue";
 import ControlPanel from "./ControlPanel.vue";
-import TermGridService from "../services/TermGridService.js";
+import EventBus from '../eventBus/eventBus.js';
 import { mapState } from 'vuex';
-import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
 
 export default {
     components: {
@@ -100,6 +100,7 @@ export default {
       deleteTermAction: 'deleteTerm',
       getColumnsAction: 'getColumns',
       addColumnAction: 'addColumn',
+      updateColumnAction: 'updateColumn',
       deleteColumnAction: 'deleteColumn'
     }),
     showAddColumnDialogbox() {
@@ -113,7 +114,7 @@ export default {
         this.showAnnouncement("You did not select a column to edit!", "red");
         return;
       }
-      document.querySelector('#edit-column-dialog-box #column-name').value = this.selectedColumn.column_name;
+      document.querySelector('#edit-column-dialog-box #column-name').value = this.selectedColumn.columnName;
       this.$refs.editColumnDialogbox.show();
     },
     closeEditColumnDialogbox() {
@@ -123,6 +124,7 @@ export default {
       this.$refs.addTermDialogbox.show();
     },
     closeAddTermDialogbox() {
+      
       this.$refs.addTermDialogbox.close();
     },
     showEditTermDialogbox() {
@@ -130,8 +132,8 @@ export default {
         this.showAnnouncement("You did not select a term to edit!", "red");
         return;
       }
-      document.querySelectorAll('#edit-term-dialog-box [id*="column_"]').forEach((el) => {
-        el.value = this.selectedTerm[el.id];
+      document.querySelectorAll('#edit-term-dialog-box [id*="column_"]').forEach((element) => {
+        element.value = this.selectedTerm.termProperties[element.id];
       });
       this.$refs.editTermDialogbox.show();
     },
@@ -141,7 +143,7 @@ export default {
     columnNameIsUnique(columnName) {
       for (var i = 0; i < this.columns.length; i++) {
            var obj = this.columns[i];
-           if (obj.column_name.toLowerCase() == columnName.toLowerCase()) {return false};
+           if (obj.columnName.toLowerCase() == columnName.toLowerCase()) {return false};
       }
       return true;
     },
@@ -149,40 +151,17 @@ export default {
       this.getColumnsAction();
     },
     addColumn() {
-      if (this.columnName == "") {
-        let notification = {
-          type: 'error',
-          message: "Column name is required!"
-        }
-        this.$store.dispatch('notificator/add', notification)
-      } else if (!this.columnNameIsUnique(this.columnName)) {
-        let notification = {
-          type: 'error',
-          message: "This name is already in use!"
-        }
-        this.$store.dispatch('notificator/add', notification)
-      } else {
+      if (this.isInputValidInAddColumnDialogBox()) {
         this.closeAddColumnDialogbox();
-        this.addColumnAction(this.columnName);
+        let userInput = this.convertUserInputToJsonObject(document.querySelectorAll('#add-column-dialog-box input'));
+        this.addColumnAction(userInput);
       }
     },
     updateColumn() {
-      if (this.columnName == "") {
-        this.showAnnouncement("Column name is required!", "red");
-      } else if (!this.columnNameIsUnique(this.columnName)) {
-        this.showAnnouncement("This name is already in use!", "red");
-      } else {
+      if (this.isInputValidInAddColumnDialogBox()) {
         this.closeEditColumnDialogbox();
-        this.selectedColumn.column_name = this.columnName;
-        TermGridService.updateColumn(this.selectedColumn)
-        .then(() => {
-          this.getColumns();
-          this.getTerms();
-        })
-        .then(() => {
-          this.showAnnouncement("Column was successfully updated!", "green");
-        })
-        .catch((error) => {console.log(error)});
+        let userInput = this.convertUserInputToJsonObject(document.querySelectorAll('#edit-column-dialog-box input'));
+        this.updateColumnAction(userInput);
       } 
     },
     deleteColumn() {
@@ -193,7 +172,7 @@ export default {
     },
     addTerm() {
       this.closeAddTermDialogbox();
-      let userInput = this.convertUserInputToJsonString(document.querySelectorAll('#add-term-dialog-box [id*="column_"]'), null);
+      let userInput = this.convertUserInputToJsonObject(document.querySelectorAll('#add-term-dialog-box [id*="column_"]'));
       this.addTermAction(userInput)
       .then(() => {
         this.$refs.addTermDialogbox.emptyTextInputs();
@@ -201,24 +180,49 @@ export default {
     },
     updateTerm() {
       this.closeEditTermDialogbox();
-      let userInput = this.convertUserInputToJsonString(document.querySelectorAll('#edit-term-dialog-box [id*="column_"]'), this.selectedTerm.id);
+      let userInput = this.convertUserInputToJsonObject(document.querySelectorAll('#edit-term-dialog-box [id*="column_"]'));
       this.updateTermAction(userInput)
     },
     deleteTerm() {
       this.deleteTermAction()
     },
-    convertUserInputToJsonString(input, termId) {
+    convertUserInputToJsonObject(input) {
       let jsonString = "{";
-      if (termId) {jsonString += `"id": "${termId}", `} 
       input.forEach((obj) => {
         jsonString += `"${obj.id}": "${obj.value}", `;
       });
-      return jsonString.replace(/, $/g, '}');
+      jsonString = jsonString.replace(/, $/g, '}');
+      return JSON.parse(jsonString);
+    },
+    isInputValidInAddColumnDialogBox() {
+      if (!this.columnName) {
+        let notification = {
+          type: 'error',
+          message: "Column name is required!"
+        }
+        this.$store.dispatch('notificator/add', notification)
+        console.log("Column name is required!")
+        return false;
+      } 
+      if (!this.columnNameIsUnique(this.columnName)) {
+        let notification = {
+          type: 'error',
+          message: "This name is already in use!"
+        }
+        this.$store.dispatch('notificator/add', notification)
+        console.log("This name is already in use!")
+        return false;
+      }
+      return true;
     }
   },
   mounted () {
     this.getColumns();
     this.getTerms();
+    console.log(EventBus)
+    EventBus.$on('eventBusClick', (payload) => {
+      console.log(payload)
+    })
   },
   updated() {
     if(this.selectedColumn && document.querySelector(`td[data-id=${this.selectedColumn.html_id}]:not(.selected-column)`)) {

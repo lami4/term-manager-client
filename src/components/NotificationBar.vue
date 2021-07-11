@@ -23,7 +23,7 @@ export default {
     mounted() {
         setTimeout(() => {
             this.delete(this.notification);
-        }, 5000);
+        }, 4900);
         this.$refs.self.animate({opacity: '0'}, 5000);
     }
 }

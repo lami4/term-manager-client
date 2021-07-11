@@ -29,7 +29,7 @@ export default new Vuex.Store({
       if (!columnHtmlId && !state.selectedColumn) {
         state.selectedColumn = null;
       } else {
-        state.selectedColumn = state.columns.find((obj) => obj.html_id == columnHtmlId);
+        state.selectedColumn = state.columns.find((obj) => obj.htmlId == columnHtmlId);
         state.selectedTerm = null;
       }
     },
@@ -39,8 +39,8 @@ export default new Vuex.Store({
     SET_COLUMNS(state, columns) {
       state.columns = columns;
     },
-    SET_COLUMN_NAME(state, columnName) {
-      state.selectedColumn.column_name = columnName;
+    SET_SELECTED_COLUMN_NAME(state, columnName) {
+      state.selectedColumn.columnName = columnName;
     }
   },
   actions: {
@@ -50,8 +50,22 @@ export default new Vuex.Store({
     updateSelectedColumn({ commit }, columnHtmlId) {
       commit('SET_SELECTED_COLUMN', columnHtmlId);
     },
+    getTerms({ commit, dispatch }) {
+      return TermGridService.getTerms()
+      .then(response => {
+        commit('SET_TERMS', response.data);
+      })
+      .catch(error => {
+        console.log("Error performing 'getTerms' action: " + error.message);
+        let notification = {
+          type: 'error',
+          message: "Cannot fetch terms from the database!"
+        }
+        dispatch('notificator/add', notification)
+      })
+    },
     addTerm({dispatch}, userInput) {
-      return TermGridService.addTerm(userInput)
+      return TermGridService.addTerm('terms', {"termProperties": userInput})
       .then(() => {
         let notification = {
           type: 'success',
@@ -70,8 +84,8 @@ export default new Vuex.Store({
         dispatch('notificator/add', notification)
       })
     },
-    updateTerm({dispatch} , userInput) {
-      return TermGridService.updateTerm(userInput)
+    updateTerm({dispatch, state}, userInput) {
+      return TermGridService.updateTerm(`/terms/${state.selectedTerm.id}`, {"termProperties": userInput})
       .then(() => {
         let notification = {
           type: 'success',
@@ -89,6 +103,84 @@ export default new Vuex.Store({
         }
         dispatch('notificator/add', notification)
         console.log("Error performing 'updateTerm' action: " + error.message)
+      })
+    },
+    deleteTerm({state, dispatch}) {
+      return TermGridService.deleteTerm(`terms/${state.selectedTerm.id}`)
+      .then(() => {
+        state.selectedTerm = null;
+        let notification = {
+          type: 'success',
+          message: "Term was successfully deleted!"
+        }
+        dispatch('notificator/add', notification)
+      })
+      .then(() => {
+        dispatch("getTerms")
+      })
+      .catch(error => {
+        let notification = {
+          type: 'error',
+          message: "Cannot delete term!"
+        }
+        dispatch('notificator/add', notification)
+        console.log("Error performing 'deleteTerm' action: " + error.message)
+      })
+    },
+    getColumns({ commit, dispatch }) {
+      return TermGridService.getColumns()
+      .then(response => {
+        commit('SET_COLUMNS', response.data);
+      })
+      .catch(error => {
+        console.log("Error performing 'getColumns' action: " + error.message);
+        let notification = {
+          type: 'error',
+          message: "Cannot fetch columns from the database!"
+        }
+        dispatch('notificator/add', notification)
+      })
+    },
+    addColumn({dispatch}, userInput) {
+      return TermGridService.addColumn({"columnName": userInput["column-name"]})
+      .then(() => {
+        let notification = {
+          type: 'success',
+          message: "Column was successfully added!"
+        }
+        dispatch('notificator/add', notification)
+      })
+      .then(() => {
+        dispatch('getColumns');
+        dispatch('getTerms');
+      })
+      .catch(error => {
+        let notification = {
+          type: 'error',
+          message: "Cannot add column!"
+        }
+        dispatch('notificator/add', notification)
+      })
+    },
+    updateColumn({state, dispatch, commit}, userInput) {
+      return TermGridService.updateColumn(`/columns/${state.selectedColumn.id}`, {"columnName" : userInput["column-name"]})
+      .then(() => {
+        commit('SET_SELECTED_COLUMN_NAME', userInput["column-name"])
+      })
+      .then(() => {
+        let notification = {
+          type: 'success',
+          message: "Column was successfully updated!"
+        }
+        dispatch('notificator/add', notification)
+      })
+      .catch(error => {
+        let notification = {
+          type: 'error',
+          message: "Cannot update column!"
+        }
+        dispatch('notificator/add', notification)
+        console.log("Error performing 'updateColumn' action: " + error.message)
       })
     },
     deleteColumn({state, dispatch}) {
@@ -112,78 +204,6 @@ export default new Vuex.Store({
         }
         dispatch('notificator/add', notification)
         console.log("Error performing 'deleteColumn' action: " + error.message)
-      })
-    },
-    deleteTerm({state, dispatch}) {
-      return TermGridService.deleteTerm(state.selectedTerm.id)
-      .then(() => {
-        state.selectedTerm = null;
-        let notification = {
-          type: 'success',
-          message: "Term was successfully deleted!"
-        }
-        dispatch('notificator/add', notification)
-      })
-      .then(() => {
-        dispatch("getTerms")
-      })
-      .catch(error => {
-        let notification = {
-          type: 'error',
-          message: "Cannot delete term!"
-        }
-        dispatch('notificator/add', notification)
-        console.log("Error performing 'deleteTerm' action: " + error.message)
-      })
-    },
-    getTerms({ commit, dispatch }) {
-      return TermGridService.getTerms()
-      .then(response => {
-        commit('SET_TERMS', response.data);
-      })
-      .catch(error => {
-        console.log("Error performing 'getTerms' action: " + error.message);
-        let notification = {
-          type: 'error',
-          message: "Cannot fetch terms from the database!"
-        }
-        dispatch('notificator/add', notification)
-      })
-    },
-    getColumns({ commit, dispatch }) {
-      return TermGridService.getColumns()
-      .then(response => {
-        commit('SET_COLUMNS', response.data);
-      })
-      .catch(error => {
-        console.log("Error performing 'getColumns' action: " + error.message);
-        let notification = {
-          type: 'error',
-          message: "Cannot fetch columns from the database!"
-        }
-        dispatch('notificator/add', notification)
-      })
-    },
-    addColumn({dispatch}, columnName) {
-      return TermGridService.addColumn(columnName)
-      .then(() => {
-        let notification = {
-          type: 'success',
-          message: "Column was successfully added!"
-        }
-        dispatch('notificator/add', notification)
-      })
-      .then(() => {
-        dispatch('getColumns');
-        dispatch('getTerms');
-      })
-      .catch(error => {
-        let notification = {
-          type: 'error',
-          message: "Cannot add column!"
-        }
-        dispatch('notificator/add', notification)
-        console.log("Error performing 'addColumn' action: " + error.message)  
       })
     }
   }

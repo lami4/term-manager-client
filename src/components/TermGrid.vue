@@ -1,26 +1,12 @@
-<!--<template>
-      <table class="term-grid">
-        <colgroup></colgroup>
-        <thead v-if="columns">
-            <tr>
-            <th v-for="column in columns" v-bind:key="column.id" @click="selectColumn" :data-id="column.html_id">{{ column.column_name }}</th>
-            </tr>
-        </thead>
-        <tbody v-if="terms">
-            <tr v-for="term in terms" v-bind:key="term.id" :id="term.id">
-                <td v-if="!isTermId(term.id, value)" v-for="(value, jsonKey) in term" v-bind:key="generateId(term.id, jsonKey)" @click="selectTerm" :data-id="jsonKey">{{ value }}</td>
-            </tr>
-        </tbody>
-      </table> 
-</template> -->
-
 <script>
 import { mapState } from 'vuex';
 export default {
-    computed: mapState({
+    computed: {
+      ...mapState({
          columns: "columns",
          terms: "terms"
-    }),
+      })
+    },
     methods: {
         isTermId(termId, iterratedField) {
             return termId == iterratedField;
@@ -29,7 +15,6 @@ export default {
             return termId + '_' + columnId;
         },
         selectTerm(event) {
-          console.log(3)
             //remove column selection
             document.querySelectorAll(".selected-column").forEach(el => {
               el.classList.remove("selected-column");
@@ -47,7 +32,6 @@ export default {
             }
         },
         selectColumn(event) {
-          console.log(1)
             //remove term selection
             if(document.querySelector(".selected-term")) {
                 document.querySelector(".selected-term").classList.remove("selected-term");
@@ -92,16 +76,14 @@ export default {
         tbody = h('tbody', null, this.terms.map(term => {
           //preparing TDs for TR
           let tds = [];
-          for (let property in term) {
-            if (!this.isTermId(term.id, term[property])) {
+          for (let property in term.termProperties) {
               let dataObject = {
                 key: this.generateId(term.id, property), 
                 attrs: {
                   'data-id': property
                   }
               }
-              tds.push(h('td', dataObject, term[property]))
-            }
+              tds.push(h('td', dataObject, term.termProperties[property]))
           }
           //preparing data object for TR
           let dataObject = {
@@ -123,13 +105,13 @@ export default {
           let dataObject = {
             key: column.id,
             attrs: {
-               'data-id': column.html_id
+               'data-id': column.htmlId
             },
             on: {
               click: this.selectColumn
             }
           }
-          columnHeaders.push(h('th', dataObject, column.column_name))
+          columnHeaders.push(h('th', dataObject, column.columnName))
         }
         thead = h('thead', null, [h('tr', null, columnHeaders)])
       }

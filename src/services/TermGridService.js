@@ -8,25 +8,25 @@ export default {
     getTerms() {
         return HTTP.get('/terms');
     },
-    addTerm(jsonString) {
-        return HTTP.put('/terms', jsonString);
+    addTerm(uri, payload) {
+        return HTTP.post(uri, payload);
     },
-    updateTerm(jsonString) {
-        return HTTP.post('/terms', jsonString);
+    updateTerm(uri, payload) {
+        return HTTP.put(uri, payload);
     },
-    deleteTerm(selectedTermId) {
-        return HTTP.delete('/terms', {data: selectedTermId});
+    deleteTerm(uri) {
+        return HTTP.delete(uri);
     },
     getColumns() {
         return HTTP.get('/columns');
     },
-    addColumn(columnName) {
-        return HTTP.put('/columns', columnName);
+    addColumn(bodyJson) {
+        return HTTP.post('/columns', bodyJson);
     },
-    updateColumn(selectedColumn) {
-        return HTTP.post('/columns', selectedColumn);
+    updateColumn(uri, payload) {
+        return HTTP.put(uri, payload);
     },
     deleteColumn(selectedColumn) {
-        return HTTP.delete('/columns', {data: selectedColumn.html_id});
+        return HTTP.delete(`/columns/${selectedColumn.id}`);
     }
 }

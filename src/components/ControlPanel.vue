@@ -69,6 +69,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import EventBus from '../eventBus/eventBus.js'
 export default {
     computed: mapState({
          selectedTerm: "selectedTerm",
@@ -77,6 +78,7 @@ export default {
     methods: {
       emitAddTerm() {
         this.$emit('showAddTermDialogbox');
+        EventBus.$emit('eventBusClick', "hello")
       },
       emitEditTerm() {
         this.$emit('showEditTermDialogbox');

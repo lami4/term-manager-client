@@ -1,0 +1,4 @@
+
+function prepareDialogboxData(vuexState) {
+    
+} 
