@@ -51,12 +51,12 @@ export default new Vuex.Store({
       commit('SET_SELECTED_COLUMN', columnHtmlId);
     },
     getTerms({ commit, dispatch }) {
-      return TermGridService.getTerms()
+      return TermGridService.getTerms('/terms')
       .then(response => {
         commit('SET_TERMS', response.data);
       })
       .catch(error => {
-        console.log("Error performing 'getTerms' action: " + error.message);
+        console.error("Error performing 'getTerms' action: " + error.message);
         let notification = {
           type: 'error',
           message: "Cannot fetch terms from the database!"
@@ -64,8 +64,8 @@ export default new Vuex.Store({
         dispatch('notificator/add', notification)
       })
     },
-    addTerm({dispatch}, userInput) {
-      return TermGridService.addTerm('terms', {"termProperties": userInput})
+    addTerm({dispatch}, payload) {
+      return TermGridService.addTerm('terms', {"termProperties": payload})
       .then(() => {
         let notification = {
           type: 'success',
@@ -84,8 +84,8 @@ export default new Vuex.Store({
         dispatch('notificator/add', notification)
       })
     },
-    updateTerm({dispatch, state}, userInput) {
-      return TermGridService.updateTerm(`/terms/${state.selectedTerm.id}`, {"termProperties": userInput})
+    updateTerm({dispatch, state}, payload) {
+      return TermGridService.updateTerm(`/terms/${state.selectedTerm.id}`, {"termProperties": payload})
       .then(() => {
         let notification = {
           type: 'success',
@@ -102,7 +102,7 @@ export default new Vuex.Store({
           message: "Cannot update term!"
         }
         dispatch('notificator/add', notification)
-        console.log("Error performing 'updateTerm' action: " + error.message)
+        console.error("Error performing 'updateTerm' action: " + error.message)
       })
     },
     deleteTerm({state, dispatch}) {
@@ -124,16 +124,16 @@ export default new Vuex.Store({
           message: "Cannot delete term!"
         }
         dispatch('notificator/add', notification)
-        console.log("Error performing 'deleteTerm' action: " + error.message)
+        console.error("Error performing 'deleteTerm' action: " + error.message)
       })
     },
     getColumns({ commit, dispatch }) {
-      return TermGridService.getColumns()
+      return TermGridService.getColumns('/columns')
       .then(response => {
         commit('SET_COLUMNS', response.data);
       })
       .catch(error => {
-        console.log("Error performing 'getColumns' action: " + error.message);
+        console.error("Error performing 'getColumns' action: " + error.message);
         let notification = {
           type: 'error',
           message: "Cannot fetch columns from the database!"
@@ -141,8 +141,8 @@ export default new Vuex.Store({
         dispatch('notificator/add', notification)
       })
     },
-    addColumn({dispatch}, userInput) {
-      return TermGridService.addColumn({"columnName": userInput["column-name"]})
+    addColumn({dispatch}, payload) {
+      return TermGridService.addColumn('/columns', {"columnName": payload.columnName})
       .then(() => {
         let notification = {
           type: 'success',
@@ -162,10 +162,10 @@ export default new Vuex.Store({
         dispatch('notificator/add', notification)
       })
     },
-    updateColumn({state, dispatch, commit}, userInput) {
-      return TermGridService.updateColumn(`/columns/${state.selectedColumn.id}`, {"columnName" : userInput["column-name"]})
+    updateColumn({state, dispatch, commit}, payload) {
+      return TermGridService.updateColumn(`/columns/${state.selectedColumn.id}`, {"columnName" : payload.columnName})
       .then(() => {
-        commit('SET_SELECTED_COLUMN_NAME', userInput["column-name"])
+        commit('SET_SELECTED_COLUMN_NAME', payload["column-name"])
       })
       .then(() => {
         let notification = {
@@ -180,11 +180,11 @@ export default new Vuex.Store({
           message: "Cannot update column!"
         }
         dispatch('notificator/add', notification)
-        console.log("Error performing 'updateColumn' action: " + error.message)
+        console.error("Error performing 'updateColumn' action: " + error.message)
       })
     },
     deleteColumn({state, dispatch}) {
-      return TermGridService.deleteColumn(state.selectedColumn)
+      return TermGridService.deleteColumn(`/columns/${state.selectedColumn.id}`)
       .then(() => {
         state.selectedColumn = null;
         let notification = {
@@ -203,7 +203,7 @@ export default new Vuex.Store({
           message: "Cannot delete column!"
         }
         dispatch('notificator/add', notification)
-        console.log("Error performing 'deleteColumn' action: " + error.message)
+        console.error("Error performing 'deleteColumn' action: " + error.message)
       })
     }
   }

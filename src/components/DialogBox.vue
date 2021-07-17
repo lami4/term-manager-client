@@ -1,54 +1,152 @@
 <template>
-<div class="dialogbox-background" :id="htmlId">
+<div class="dialogbox-background" :class="{displayed: visible}" id="dialogbox">
   <div class="dialogbox-container">
     <div class="dialogbox-header">
         <span class="title">{{ title }}</span>
         <span class="close" @click="close">&times;</span>
     </div>
     <div class="dialogbox-body">
-        <slot name="dialogbox-body"></slot>
+      <div v-if="inputs" class="dialogbox-body">
+        <Input v-for="input in inputs" :for="input.htmlId" v-bind:key="input.htmlId" :input="input"></Input>
+      </div>
     </div>
     <div class="dialogbox-footer">
-        <slot name="dialogbox-footer"></slot>
+        <button class="btn" @click="submit">{{submitButtonLabel}}</button>
+        <button class="btn" @click="close">Close</button>
     </div>
   </div>
 </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import Input from './Input.vue'
+import EventBus from '../eventBus/eventBus.js'
 export default {
-    props: {
-        title: String,
-        htmlId: String
-    },
+  components: {
+    Input: Input
+  },
     data() {
         return {
+          title: null,
+          inputs: null,
+          visible: false,
+          submitButtonLabel: null,
+          action: null,
+          object: null
         }
     },
+    computed: mapState({
+         selectedTerm: "selectedTerm",
+         selectedColumn: "selectedColumn",
+         columns: "columns",
+         terms: "terms"
+    }),
     methods: {
        show() {
-           document.querySelector(`#${this.htmlId}`).style.display = "block";
+           this.visible = true;
        },
        close() {
-           document.querySelector(`#${this.htmlId}`).style.display = "none";
+           this.visible = false;
        },
-       emptyTextInputs() {
-         document.querySelectorAll("input[type='text']").forEach(el => {
-           el.value = "";
-         });
-       }
-    },
-    mounted() {
-      document.querySelector(`#${this.htmlId}`).addEventListener('click', event => {
-        if(event.target == document.querySelector(`#${this.htmlId}`)) {
+       submit() {
+        if (this.isInputValid()) {
+          let payload = this.convertUserInputToPayload();
+          EventBus.$emit('submitDialogbox', payload, this.action, this.object);
           this.close();
         }
-      });
+       },
+        prepareDialogboxRenderData(action, object) {
+          if (object == 'column') {
+            return [{
+              label: "Header",
+              htmlId: action == 'add' ? null : this.selectedColumn.htmlId,
+              value: action == 'add' ? null : this.selectedColumn.columnName
+            }]
+          }
+          if (object == 'term') {
+            return this.columns.map(element => {
+              return {
+                label: element.columnName,
+                htmlId: element.htmlId,
+                value: action == 'add' ? null : this.selectedTerm.termProperties[element.htmlId]      
+              }
+            })
+          }
+      },
+      convertUserInputToPayload() {
+        let payload = {}
+        if (this.object == 'column') {
+          payload["columnName"] = this.inputs[0].value;
+        }
+        if (this.object == 'term') {
+          this.inputs.forEach(element => {
+            payload[element.htmlId] = element.value;
+          })
+        }
+        return payload;
+      },
+      createTitle(action, object) {
+        return action[0].toUpperCase() + action.slice(1) + " " + object;
+      },
+      createSubmitButtonLabel(action) {
+        if (action == 'add') {
+          return "Add"
+        }
+        if (action == 'edit') {
+          return "Apply"
+        }
+      },
+      isInputValid() {
+        if (this.object == "column") {
+          if (!this.inputs[0].value) {
+            let notification = {
+              type: 'error',
+              message: "Column name is required!"
+            }
+            this.$store.dispatch('notificator/add', notification)
+            console.log("Column name is required!")
+            return false;
+          } 
+          if (!this.columnNameIsUnique(this.inputs[0].value)) {
+            let notification = {
+              type: 'error',
+              message: "This name is already in use!"
+            }
+            this.$store.dispatch('notificator/add', notification)
+            console.log("This name is already in use!")
+            return false;
+          }
+          return true;
+        }
+        return true;
+      },
+      columnNameIsUnique(columnName) {
+        for (var i = 0; i < this.columns.length; i++) {
+            var obj = this.columns[i];
+            if (obj.columnName.toLowerCase() == columnName.toLowerCase()) {return false};
+        }
+        return true;
+      }
+    },
+    mounted() {
+      EventBus.$on('showDialogbox', (action, object) => {
+        this.inputs = this.prepareDialogboxRenderData(action, object);
+        this.title = this.createTitle(action, object);
+        this.submitButtonLabel = this.createSubmitButtonLabel(action);
+        this.show();
+        this.action = action;
+        this.object = object;
+      })
     }
 }
 </script>
 
 <style>
+.displayed {
+  display: block !important;
+}
+
 .dialogbox-background {
   display: none;
   position: fixed;

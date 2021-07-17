@@ -20,7 +20,7 @@ export default {
               el.classList.remove("selected-column");
             });
             //if tr that fired the onclick event does not have 'selected-term' class but there is another tr that has it, find this tr that and delete 'selected-term' class from it
-            if(!event.target.parentNode.classList.contains("selected-term") && document.querySelector(".selected-term")) {
+            if (!event.target.parentNode.classList.contains("selected-term") && document.querySelector(".selected-term")) {
                  document.querySelector(".selected-term").classList.remove("selected-term");
             }
             event.target.parentNode.classList.toggle("selected-term");
@@ -63,7 +63,7 @@ export default {
               document.querySelectorAll(".selected-column").forEach(el => {
                 el.classList.remove("selected-column");
               });
-              this.$store.dispatch("updateSelectedColumn", event.target.getAttribute("data-id"));
+              this.$store.dispatch("updateSelectedColumn", null);
             }
         }    
     },
@@ -117,7 +117,7 @@ export default {
       }
 
       return h('table', {'class': 'term-grid'}, [colgroup, thead, tbody])
-    },
+    }
 }
 </script>
 

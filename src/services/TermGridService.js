@@ -5,8 +5,8 @@ baseURL: 'http://localhost:4567'
 })
 
 export default {
-    getTerms() {
-        return HTTP.get('/terms');
+    getTerms(uri) {
+        return HTTP.get(uri);
     },
     addTerm(uri, payload) {
         return HTTP.post(uri, payload);
@@ -17,16 +17,16 @@ export default {
     deleteTerm(uri) {
         return HTTP.delete(uri);
     },
-    getColumns() {
-        return HTTP.get('/columns');
+    getColumns(uri) {
+        return HTTP.get(uri);
     },
-    addColumn(bodyJson) {
-        return HTTP.post('/columns', bodyJson);
+    addColumn(uri, payload) {
+        return HTTP.post(uri, payload);
     },
     updateColumn(uri, payload) {
         return HTTP.put(uri, payload);
     },
-    deleteColumn(selectedColumn) {
-        return HTTP.delete(`/columns/${selectedColumn.id}`);
+    deleteColumn(uri) {
+        return HTTP.delete(uri);
     }
 }
