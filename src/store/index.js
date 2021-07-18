@@ -18,20 +18,12 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_SELECTED_TERM(state, termId) {
-      if (!termId && !state.selectedTerm) {
-        state.selectedTerm = null;
-      } else {
-        state.selectedTerm = state.terms.find((obj) => obj.id == termId);
-        state.selectedColumn = null;
-      }
+      state.selectedTerm = termId ? state.selectedTerm = state.terms.find((obj) => obj.id == termId) : null;
+      state.selectedColumn = null;
     },
     SET_SELECTED_COLUMN(state, columnHtmlId) {
-      if (!columnHtmlId && !state.selectedColumn) {
-        state.selectedColumn = null;
-      } else {
-        state.selectedColumn = state.columns.find((obj) => obj.htmlId == columnHtmlId);
-        state.selectedTerm = null;
-      }
+      state.selectedColumn = columnHtmlId ? state.columns.find((obj) => obj.htmlId == columnHtmlId) : null;
+      state.selectedTerm = null;
     },
     SET_TERMS(state, terms) {
       state.terms = terms;
@@ -165,7 +157,7 @@ export default new Vuex.Store({
     updateColumn({state, dispatch, commit}, payload) {
       return TermGridService.updateColumn(`/columns/${state.selectedColumn.id}`, {"columnName" : payload.columnName})
       .then(() => {
-        commit('SET_SELECTED_COLUMN_NAME', payload["column-name"])
+        commit('SET_SELECTED_COLUMN_NAME', payload.columnName)
       })
       .then(() => {
         let notification = {

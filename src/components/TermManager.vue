@@ -72,7 +72,7 @@ export default {
     })
   },
   updated() {
-    if(this.selectedColumn && document.querySelector(`td[data-id=${this.selectedColumn.htmlId}]:not(.selected-column)`)) {
+    if (this.selectedColumn && document.querySelector(`td[data-id=${this.selectedColumn.htmlId}]:not(.selected-column)`)) {
       document.querySelector(`td[data-id=${this.selectedColumn.htmlId}]:not(.selected-column)`).classList.add("selected-column");
     }
   }
