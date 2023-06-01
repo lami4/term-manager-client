@@ -7,25 +7,26 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
-    props: {
-        notification: {
-            type: Object,
-            required: true
-        }
-    },
-    data() {
-        return {
-        }
-    },
-    methods: {
-    ...mapActions('notificator', ['delete'])
-    },
-    mounted() {
-        setTimeout(() => {
-            this.delete(this.notification);
-        }, 4900);
-        this.$refs.self.animate({opacity: '0'}, 5000);
+  name: "NotificationBar",
+  props: {
+    notification: {
+        type: Object,
+        required: true
     }
+  },
+  data() {
+    return {
+    }
+  },
+  methods: {
+    ...mapActions('notification', ['delete'])
+  },
+  mounted() {
+    setTimeout(() => {
+        this.delete(this.notification);
+    }, 4900);
+    this.$refs.self.animate({opacity: '0'}, 5000);
+  }
 }
 </script>
 

@@ -2,11 +2,50 @@
 import { mapState } from 'vuex';
 export default {
     computed: {
-      ...mapState({
-         columns: "columns",
-         terms: "terms"
-      })
+      // ...mapState({
+      //    columns: "columns",
+      //    terms: "terms"
+      // })
     },
+  data() {
+      return {
+        columns: [
+          {
+            id: 1,
+            columnName: "Term",
+            htmlId: "column_1"
+          },
+          {
+            id: 2,
+            columnName: "Definition",
+            htmlId: "column_2"
+          },
+          {
+            id: 3,
+            columnName: "Part of speech",
+            htmlId: "column_3"
+          },
+        ],
+        terms: [
+          {
+            id: 1,
+            termProperties: {
+              column_1: "SQL",
+              column_2: "Programming language",
+              column_3: "Noun"
+            }
+          },
+          {
+            id: 2,
+            termProperties: {
+              column_1: "SQL",
+              column_2: "Programming language",
+              column_3: "Noun"
+            }
+          }
+        ]
+      }
+  },
     methods: {
         isTermId(termId, iterratedField) {
             return termId == iterratedField;
@@ -116,54 +155,54 @@ export default {
         thead = h('thead', null, [h('tr', null, columnHeaders)]);
       }
 
-      return h('table', {'class': 'term-grid'}, [colgroup, thead, tbody])
+      return h('table', {'class': 'base-grid'}, [colgroup, thead, tbody])
     }
 }
 </script>
 
 <style>
-.table-wrapper {
+.grid-wrapper {
   border-radius: 10px;
   width: 1000px;
   overflow: hidden;
 }
 
-.term-grid {
+.base-grid {
   width: 100%;
   overflow-wrap: break-word;
   border-collapse: collapse;
 }
 
-.term-grid th {
+.base-grid th {
   color: #4f4f4f;
   background-color: #b1d4e0;
 }
 
-.term-grid th, 
-.term-grid td {
+.base-grid th,
+.base-grid td {
   text-align: left;
   padding: 10px 0 10px 15px;
   cursor: default;
 }
 
-.term-grid {
+.base-grid {
   color: #4f4f4f;
   background-color: #ffffff;
 }
 
-.term-grid tr {
+.base-grid tr {
   border-bottom: 1px solid #f2f2f2;
 }
 
-.term-grid tr:last-child{
+.base-grid tr:last-child{
   border-bottom: 0px solid #f2f2f2;
 }
 
-.selected-term {
+.selected {
   background-color: #E3E8E9;
 }
 
-.selected-column {
+.selected {
   background-color: #E3E8E9;
 }
 

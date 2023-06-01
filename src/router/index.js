@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import TermManager from '../components/TermManager'
+import TermManager from '../views/TermManager/TermManager'
 import About from '../components/About'
 
 Vue.use(VueRouter)

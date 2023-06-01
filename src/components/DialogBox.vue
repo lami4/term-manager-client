@@ -1,5 +1,5 @@
 <template>
-<div class="dialogbox-background" :class="{displayed: visible}" id="dialogbox">
+<div class="dialogbox" :class="{displayed: visible}" id="dialogbox">
   <div class="dialogbox-container">
     <div class="dialogbox-header">
         <span class="title">{{ title }}</span>
@@ -104,7 +104,7 @@ export default {
               type: 'error',
               message: "Column name is required!"
             }
-            this.$store.dispatch('notificator/add', notification)
+            this.$store.dispatch('notification/add', notification)
             console.log("Column name is required!")
             return false;
           } 
@@ -113,7 +113,7 @@ export default {
               type: 'error',
               message: "This name is already in use!"
             }
-            this.$store.dispatch('notificator/add', notification)
+            this.$store.dispatch('notification/add', notification)
             console.log("This name is already in use!")
             return false;
           }
@@ -124,7 +124,7 @@ export default {
       columnNameIsUnique(columnName) {
         for (var i = 0; i < this.columns.length; i++) {
             var obj = this.columns[i];
-            if (obj.columnName.toLowerCase() == columnName.toLowerCase()) {return false};
+            if (obj.columnName.toLowerCase() === columnName.toLowerCase()) {return false};
         }
         return true;
       }
@@ -147,7 +147,7 @@ export default {
   display: block !important;
 }
 
-.dialogbox-background {
+.dialogbox {
   display: none;
   position: fixed;
   z-index: 1;

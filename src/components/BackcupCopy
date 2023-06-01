@@ -1,0 +1,193 @@
+<template>
+  <div class="toolbar">
+      <div class="toolbar-section">
+          <!-- Add term -->
+          <button class="btn2" @click="showCreateTermDialog">
+              <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
+                  <path fill="#90CAF9" d="M43,30V18c0-2.2-1.8-4-4-4H9c-2.2,0-4,1.8-4,4v12c0,2.2,1.8,4,4,4h30C41.2,34,43,32.2,43,30z M9,18h30v12 L9,30V18z"/>
+                  <circle fill="#43A047" cx="38" cy="38" r="10"/>
+                  <g fill="#fff">
+                      <rect x="32" y="36" width="12" height="4"/>
+                      <rect x="36" y="32" width="4" height="12"/>
+                  </g>
+              </svg>
+          </button>
+          <!-- Edit term -->
+          <button class="btn2" :disabled="!selectedTerm" @click="showEditTermDialog">
+              <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
+                  <path fill="#90CAF9" d="M43,30V18c0-2.2-1.8-4-4-4H9c-2.2,0-4,1.8-4,4v12c0,2.2,1.8,4,4,4h30C41.2,34,43,32.2,43,30z M9,18h30v12 L9,30V18z"/>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"  fill="#ED8A19" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" x="15" y="-1">
+                      <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
+                  </svg>
+              </svg>
+          </button>
+          <!-- Delete term -->
+          <button class="btn2" :disabled="!selectedTerm" @click="deleteTerm">
+              <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
+                  <path fill="#90CAF9" d="M43,30V18c0-2.2-1.8-4-4-4H9c-2.2,0-4,1.8-4,4v12c0,2.2,1.8,4,4,4h30C41.2,34,43,32.2,43,30z M9,18h30v12 L9,30V18z"/>
+                  <circle fill="#F44336" cx="38" cy="38" r="10"/>
+                  <g fill="#fff">
+                      <rect x="36.5" y="32" transform="matrix(-.707 .707 -.707 -.707 91.74 38)" width="3" height="12"/>
+                      <rect x="36.5" y="32" transform="matrix(-.707 -.707 .707 -.707 38 91.74)" width="3" height="12"/>
+                  </g>
+              </svg>
+          </button>
+      </div>
+      <!-- Add column -->
+<!--      <button class="btn2" @click="showCreateColumnDialog">-->
+<!--      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" enable-background="new 0 0 48 48" width="24px" height="24px">-->
+<!--          <path fill="#90CAF9" d="M30,5H18c-2.2,0-4,1.8-4,4v30c0,2.2,1.8,4,4,4h12c2.2,0,4-1.8,4-4V9C34,6.8,32.2,5,30,5z M18,39V9h12l0,30 H18z"/>-->
+<!--          <circle fill="#43A047" cx="38" cy="38" r="10"/>-->
+<!--          <g fill="#fff">-->
+<!--              <rect x="36" y="32" width="4" height="12"/>-->
+<!--              <rect x="32" y="36" width="12" height="4"/>-->
+<!--          </g>-->
+<!--      </svg>-->
+<!--      </button>-->
+<!--      &lt;!&ndash; Edit column &ndash;&gt;-->
+<!--      <button class="btn2" :disabled="!selectedColumn" @click="showEditColumnDialog">-->
+<!--        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">-->
+<!--        <path fill="#90CAF9" d="M30,5H18c-2.2,0-4,1.8-4,4v30c0,2.2,1.8,4,4,4h12c2.2,0,4-1.8,4-4V9C34,6.8,32.2,5,30,5z M18,39V9h12l0,30 H18z"></path>-->
+<!--          <svg id="i-edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"  fill="#ED8A19" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" x="17" y="6">-->
+<!--            <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />-->
+<!--          </svg>-->
+<!--        </svg>-->
+<!--      </button>-->
+<!--       &lt;!&ndash; Delete column &ndash;&gt;-->
+<!--      <button class="btn2" :disabled="!selectedColumn" @click="deleteColumn">-->
+<!--      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">-->
+<!--          <path fill="#90CAF9" d="M30,5H18c-2.2,0-4,1.8-4,4v30c0,2.2,1.8,4,4,4h12c2.2,0,4-1.8,4-4V9C34,6.8,32.2,5,30,5z M18,39V9h12l0,30 H18z"/>-->
+<!--          <circle fill="#F44336" cx="38" cy="38" r="10"/>-->
+<!--          <g fill="#fff">-->
+<!--              <rect x="36.5" y="32" transform="matrix(-.707 .707 -.707 -.707 91.74 38)" width="3" height="12"/>-->
+<!--              <rect x="36.5" y="32" transform="matrix(-.707 -.707 .707 -.707 38 91.74)" width="3" height="12"/>-->
+<!--          </g>-->
+<!--      </svg>-->
+<!--      </button>-->
+<!--      <button class="btn2" @click="showSignInDialog">-->
+<!--          <svg v-if="!isSignedIn" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--              <path d="M15.8125 12.0217H3.77148" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>-->
+<!--              <path d="M12.8848 9.10571L15.8128 12.0217L12.8848 14.9377" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>-->
+<!--              <path opacity="0.4" d="M8.50439 7.38897V6.45597C8.50439 4.42097 10.1534 2.77197 12.1894 2.77197H17.0734C19.1034 2.77197 20.7484 4.41697 20.7484 6.44697V17.587C20.7484 19.622 19.0984 21.272 17.0634 21.272H12.1784C10.1494 21.272 8.50439 19.626 8.50439 17.597V16.655" stroke="#130F26" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>-->
+<!--          </svg>-->
+<!--              <svg v-if="isSignedIn" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--              <path opacity="0.4" d="M15.016 7.38948V6.45648C15.016 4.42148 13.366 2.77148 11.331 2.77148H6.45597C4.42197 2.77148 2.77197 4.42148 2.77197 6.45648V17.5865C2.77197 19.6215 4.42197 21.2715 6.45597 21.2715H11.341C13.37 21.2715 15.016 19.6265 15.016 17.5975V16.6545" stroke="#130F26" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>-->
+<!--              <path d="M21.8094 12.0215H9.76843" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>-->
+<!--              <path d="M18.8812 9.1062L21.8092 12.0212L18.8812 14.9372" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>-->
+<!--          </svg>-->
+<!--&lt;!&ndash;          {{isSignedIn ? 'Sign-off' : 'Sign-in'}}&ndash;&gt;-->
+<!--      </button>-->
+<!--      <button class="btn2" @click="showOrderColumnsDialog">-->
+<!--          Order-->
+<!--      </button>-->
+<!--      <button class="btn2" @click="showSuggestTermDialog">-->
+<!--          Suggest-->
+<!--      </button>-->
+<!--      <button class="btn2" @click="showCorrectTermDialog">-->
+<!--          Correct-->
+<!--      </button>-->
+    </div>
+</template>
+
+<script>
+import { mapState } from 'vuex';
+import EventBus from '../eventBus/eventBus.js'
+export default {
+    computed: {
+      ...mapState('TermManager', {
+         selectedTerm: "selectedTerm",
+         selectedColumn: "selectedColumn"
+      }),
+      ...mapState('Session', {
+        isSignedIn: "isSignedIn"
+      })
+    },
+    methods: {
+      showSignInDialog() {
+        EventBus.$emit('show-sign-in-dialog');
+      },
+        showOrderColumnsDialog() {
+            EventBus.$emit('show-order-columns-dialog');
+        },
+        showCreateTermDialog() {
+            EventBus.$emit('show-create-term-dialog');
+        },
+        showEditTermDialog() {
+            EventBus.$emit('show-edit-term-dialog');
+        },
+      showCreateColumnDialog() {
+        EventBus.$emit('show-create-column-dialog');
+      },
+      showEditColumnDialog() {
+        EventBus.$emit('show-edit-column-dialog');
+      },
+      deleteTerm() {
+        EventBus.$emit('delete-term');
+      },
+      deleteColumn() {
+        EventBus.$emit('delete-column');
+      },
+        showSuggestTermDialog() {
+          EventBus.$emit('show-suggest-term-dialog');
+        },
+        showCorrectTermDialog() {
+          EventBus.$emit('show-correct-term-dialog');
+        }
+    }
+}
+</script>
+
+<style>
+.toolbar {
+  /*height: 40px;*/
+  /*width: 280px;*/
+  /*background: #E3E8E9;*/
+  /*border-radius: 5px;*/
+  /*box-sizing: border-box;*/
+  margin-bottom: 10px;
+    display: flex;
+}
+
+.toolbar button:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-right: 1px solid grey;
+}
+
+.toolbar button:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.toolbar-section {
+    display: flex;
+}
+
+.btn2 {
+    cursor: pointer;
+    border: 1px solid grey;
+    border-right: none;
+  /*width: 40px;*/
+  /*height: 40px;*/
+  /*outline: none;*/
+  background-color: white;
+    padding: 4px 8px;
+    display: block;
+}
+
+.btn2:hover {
+  background-color: grey;
+}
+
+button[disabled="disabled"] path,
+button[disabled="disabled"] circle {
+  fill: gray;
+}
+
+button[disabled="disabled"]:hover {
+  background-color: white;
+}
+.toolbar .btn-icon {
+    display: block;
+}
+</style>

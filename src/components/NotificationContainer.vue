@@ -12,10 +12,11 @@
 import NotificationBar from './NotificationBar.vue'
 import { mapState } from 'vuex';
 export default {
-    components: {
-        NotificationBar
-    },
-    computed: mapState('notificator', ['notifications'])
+  name: "NotificationContainer",
+  components: {
+      NotificationBar
+  },
+  computed: mapState('notification', ['notifications'])
 }
 </script>
 
