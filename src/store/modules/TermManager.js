@@ -31,7 +31,7 @@ export const actions = {
         return TermGridService.addTerm('terms', payload)
             .then(() => {
                 showNotification('success', 'Term was successfully added!', dispatch, true);
-                dispatch("getTerms")
+                dispatch("getTerms");
             })
             .catch(error => {
                 handleError('error', 'Cannot add term!', 'addTerm', error, dispatch, true);
@@ -41,7 +41,7 @@ export const actions = {
         return TermGridService.updateTerm('/terms/' + payload.id, payload)
             .then(() => {
                 showNotification('success', 'Term was successfully updated!', dispatch, true);
-                dispatch('getTerms');
+                dispatch('updateSelectedTerm', payload);
             })
             .catch(error => {
                 handleError('error', 'Cannot update term!', 'updateTerm', error, dispatch, true);
@@ -51,8 +51,8 @@ export const actions = {
         return TermGridService.deleteTerm('terms/' + payload.id)
             .then(() => {
                 showNotification('success', 'Term was successfully deleted!', dispatch, true);
-                state.selectedTerm = null;
-                dispatch("getTerms")
+                dispatch('updateSelectedTerm', null);
+                dispatch("getTerms");
             })
             .catch(error => {
                 handleError('error', 'Cannot delete term!', 'deleteTerm', error, dispatch, true);
@@ -86,6 +86,7 @@ export const actions = {
             .then(() => {
                 showNotification('success', 'Column was successfully updated!', dispatch, true);
                 commit('UPDATE_COLUMN', payload);
+                dispatch('getTerms');
             })
             .catch(error => {
                 handleError('error', 'Cannot update column!', 'updateColumn', error, dispatch, true);
@@ -95,8 +96,9 @@ export const actions = {
         return TermGridService.deleteColumn('/columns/' + payload.id)
             .then(() => {
                 showNotification('success', 'Column was successfully deleted!', dispatch, true);
-                commit('UPDATE_TERMS_AFTER_DELETING_COLUMN', state.selectedColumn);
+                // commit('REMOVE_PROPERTY_FROM_TERMS', state.selectedColumn);
                 commit('DELETE_COLUMN', state.selectedColumn);
+                dispatch('getTerms');
             })
             .catch(error => {
                 handleError('error', 'Cannot delete column!', 'deleteColumn', error, dispatch, true);
@@ -137,12 +139,12 @@ export const mutations = {
         state.columns.splice(state.columns.findIndex(item => item.id === column.id), 1);
         state.selectedColumn = null;
     },
-    UPDATE_COLUMN_ORDER(state, columnOrderSettings) {
-        state.columns.forEach(column => {
-            column.position = columnOrderSettings[column.id];
-        })
-    },
-    UPDATE_TERMS_AFTER_DELETING_COLUMN(state, column) {
-        state.terms.forEach(item => delete item[column.htmlId]);
-    }
+    // UPDATE_COLUMN_ORDER(state, columnOrderSettings) {
+    //     state.columns.forEach(column => {
+    //         column.position = columnOrderSettings[column.id];
+    //     })
+    // },
+    // REMOVE_PROPERTY_FROM_TERMS(state, column) {
+    //     state.terms.forEach(item => delete item[column.htmlId]);
+    // }
 }

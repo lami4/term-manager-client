@@ -2,30 +2,50 @@
     <div class="toolbar">
       <template v-if="mode === 'term-manager'">
         <div class="toolbar-section">
-            <BaseButton class="base-button--xs" @click="$emit('create-term-click')">
+            <BaseButton class="base-button--xs"
+                        @click="$emit('create-term-click')"
+                        v-tooltip="'Create new term'">
                 <img src="../assets/icons/add_term.svg">
             </BaseButton>
-            <BaseButton class="base-button--xs" :disabled="!selectedTerm" @click="$emit('edit-term-click')">
+            <BaseButton class="base-button--xs"
+                        :disabled="!selectedTerm"
+                        @click="$emit('edit-term-click')"
+                        v-tooltip="'Edit term'">
                 <img src="../assets/icons/edit_term.svg">
             </BaseButton>
-            <BaseButton class="base-button--xs" :disabled="!selectedTerm" @click="$emit('delete-term-click')">
+            <BaseButton class="base-button--xs"
+                        :disabled="!selectedTerm"
+                        @click="$emit('delete-term-click')"
+                        v-tooltip="'Delete term'">
                 <img src="../assets/icons/delete_term.svg">
             </BaseButton>
-            <BaseButton class="base-button--xs" :disabled="!selectedTerm" @click="$emit('report-mistake-click')">
+            <BaseButton class="base-button--xs"
+                        @click="$emit('suggest-term-click')"
+                        v-tooltip="'Suggest new term'">
                 <img src="../assets/icons/report_mistake.svg">
             </BaseButton>
         </div>
         <div class="toolbar-section">
-            <BaseButton class="base-button--xs" @click="$emit('create-column-click')">
+            <BaseButton class="base-button--xs"
+                        @click="$emit('create-column-click')"
+                        v-tooltip="'Create new column'">
                 <img src="../assets/icons/add_column.svg">
             </BaseButton>
-            <BaseButton class="base-button--xs" :disabled="!selectedColumn" @click="$emit('edit-column-click')">
+            <BaseButton class="base-button--xs"
+                        :disabled="!selectedColumn"
+                        @click="$emit('edit-column-click')"
+                        v-tooltip="'Edit column'">
                 <img src="../assets/icons/edit_column.svg">
             </BaseButton>
-            <BaseButton class="base-button--xs" :disabled="!selectedColumn" @click="$emit('delete-column-click')">
+            <BaseButton class="base-button--xs"
+                        :disabled="!selectedColumn"
+                        @click="$emit('delete-column-click')"
+                        v-tooltip="'Delete column'">
                 <img src="../assets/icons/delete_column.svg">
             </BaseButton>
-            <BaseButton class="base-button--xs" @click="$emit('reorder-columns-click')">
+            <BaseButton class="base-button--xs"
+                        @click="$emit('reorder-columns-click')"
+                        v-tooltip="'Reorder columns'">
                 <img style="transform: rotate(90deg);" src="../assets/icons/reorder_columns.svg">
             </BaseButton>
         </div>
@@ -33,7 +53,7 @@
             <BaseButton class="base-button--xs" @click="$emit(isSignedIn ? 'sign-out-click' : 'sign-in-click')" :label="isSignedIn ? 'Sign out' : 'Sign in'"/>
         </div>
       </template>
-      <template v-if="mode === 'default'">
+      <template v-if="mode === 'default-crud'">
         <div class="toolbar-section">
           <BaseButton
               class="base-button--xs toolbar-section--default-button"
@@ -52,6 +72,11 @@
               :disabled="!defaultDeleteButtonEnabled"/>
         </div>
       </template>
+      <template v-if="mode === 'custom'">
+        <div class="toolbar-section">
+          <slot></slot>
+        </div>
+      </template>
     </div>
 </template>
 
@@ -61,9 +86,8 @@ export default {
     props: {
       mode: {
         type: String,
-        required: false,
-        default: 'default',
-        validator: propValue => ['default', 'term-manager'].includes(propValue)
+        required: true,
+        validator: propValue => ['default-crud', 'term-manager', 'custom'].includes(propValue)
       },
       defaultCreateButtonEnabled: {
         type: Boolean,

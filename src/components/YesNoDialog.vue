@@ -19,7 +19,7 @@
 import BaseDialog from './BaseDialog';
 import EventBus from "../eventBus/eventBus"
 export default {
-    name: "YesNoDialogBox",
+    name: "YesNoDialog",
     components: {
         BaseDialog
     },

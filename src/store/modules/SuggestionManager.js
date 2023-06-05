@@ -13,7 +13,7 @@ export const actions = {
         commit('SET_SELECTED_SUGGESTION', suggestion);
     },
     getSuggestions({ commit, dispatch }) {
-        return SuggestionManagerService.getSuggestions('/suggestions')
+        return SuggestionManagerService.getSuggestions()
             .then(response => {
                 commit('SET_SUGGESTIONS', response.data);
             })
@@ -22,35 +22,47 @@ export const actions = {
             })
     },
     addSuggestion({dispatch}, payload) {
-        return SuggestionManagerService.addSuggestion('/suggestions', payload)
+        return SuggestionManagerService.addSuggestion(payload)
             .then(() => {
                 showNotification('success', 'Suggestion was successfully added!', dispatch, true);
+                dispatch('getSuggestions');
             })
             .catch(error => {
                 handleError('error', 'Cannot add suggestion!', 'addSuggestion', error, dispatch, true);
             })
     },
     updateSuggestion({ commit, dispatch, state }, payload) {
-        // return UserManagerService.updateUser('users/' + payload.id, payload)
-        //     .then(() => {
-        //         state.selectedUser = payload;
-        //         showNotification('success', 'User was successfully updated!', dispatch, true);
-        //         dispatch('getUsers');
-        //     })
-        //     .catch(error => {
-        //         handleError('error', 'Cannot update user!', 'updateUser', error, dispatch, true);
-        //     })
+        return SuggestionManagerService.updateSuggestion(payload)
+            .then(() => {
+                showNotification('success', 'Suggestion was successfully updated!', dispatch, true);
+                dispatch('updateSelectedSuggestion', payload);
+            })
+            .catch(error => {
+                handleError('error', 'Cannot update suggestion!', 'updateSuggestion', error, dispatch, true);
+            })
     },
-    // deleteUser({ commit, dispatch }, payload) {
-    //     return UserManagerService.deleteUser('users/' + payload.id)
-    //         .then(() => {
-    //             showNotification('success', 'User was successfully deleted!', dispatch, true);
-    //             dispatch('getUsers');
-    //         })
-    //         .catch(error => {
-    //             handleError('error', 'Cannot delete user!', 'deleteUser', error, dispatch, true);
-    //         })
-    // }
+    deleteSuggestion({ commit, dispatch }, payload) {
+        return SuggestionManagerService.deleteSuggestion(payload)
+            .then(() => {
+                showNotification('success', 'Suggestion was successfully deleted!', dispatch, true);
+                dispatch('updateSelectedSuggestion', null);
+                dispatch('getSuggestions');
+            })
+            .catch(error => {
+                handleError('error', 'Cannot delete suggestion!', 'deleteSuggestion', error, dispatch, true);
+            })
+    },
+    acceptSuggestion({ dispatch }, payload) {
+        return SuggestionManagerService.acceptSuggestion(payload)
+            .then(() => {
+                showNotification('success', 'Suggestion was successfully accepted!', dispatch, true);
+                dispatch('updateSelectedSuggestion', null);
+                dispatch('getSuggestions');
+            })
+            .catch(error => {
+                handleError('error', 'Cannot accept suggestion!', 'acceptSuggestion', error, dispatch, true);
+            })
+    }
 }
 
 export const mutations = {

@@ -83,7 +83,7 @@ export default {
             return this.isCreate ? 'Create' : 'Apply';
         },
         dialogTitle() {
-            return this.isCreate ? 'Create column' : 'Edit column';
+            return this.isCreate ? 'Create new column' : 'Edit column';
         },
         elementTypes() {
             return ElementType.elementTypes;

@@ -35,9 +35,8 @@ export const actions = {
     updateUser({ commit, dispatch, state }, payload) {
         return UserManagerService.updateUser('users/' + payload.id, payload)
             .then(() => {
-                state.selectedUser = payload;
                 showNotification('success', 'User was successfully updated!', dispatch, true);
-                dispatch('getUsers');
+                dispatch('updateSelectedUser', payload);
             })
             .catch(error => {
                 handleError('error', 'Cannot update user!', 'updateUser', error, dispatch, true);
@@ -47,6 +46,7 @@ export const actions = {
         return UserManagerService.deleteUser('users/' + payload.id)
             .then(() => {
                 showNotification('success', 'User was successfully deleted!', dispatch, true);
+                dispatch('updateSelectedUser', null);
                 dispatch('getUsers');
             })
             .catch(error => {

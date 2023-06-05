@@ -3,8 +3,9 @@
     <h1>User manager</h1>
     <Toolbar
         class="user-manager__toolbar"
-        :default-edit-button-enabled="isCrudButtonsEnabled"
-        :default-delete-button-enabled="isCrudButtonsEnabled"
+        :mode="'default-crud'"
+        :default-edit-button-enabled="isAnyNodeSelected"
+        :default-delete-button-enabled="isAnyNodeSelected"
         @create="onCreateUserClick()"
         @edit="onEditUserClick()"
         @delete="onDeleteUserClick()"/>
@@ -31,11 +32,11 @@
 
 <script>
 import EventBus from '../../eventBus/eventBus.js';
-import BaseGrid from "../../components/BaseGrid.vue";
-import CreateEditUserDialogBox from "./components/ManageUserDialog.vue";
-import {mapActions, mapState} from "vuex";
-import YesNoDialogBox from "../../components/YesNoDialogBox";
-import Toolbar from "../../components/Toolbar";
+import BaseGrid from '../../components/BaseGrid.vue';
+import CreateEditUserDialogBox from './components/ManageUserDialog.vue';
+import YesNoDialogBox from '../../components/YesNoDialog';
+import Toolbar from '../../components/Toolbar';
+import {mapActions, mapState} from 'vuex';
 
 export default {
   name: 'UserManager',
@@ -49,29 +50,29 @@ export default {
     return {
       columns: [
         {
-          htmlId: "firstName",
+          htmlId: 'firstName',
           id: 1,
-          name: "First name",
+          name: 'First name',
         },
         {
-          htmlId: "lastName",
+          htmlId: 'lastName',
           id: 2,
-          name: "Last name",
+          name: 'Last name',
         },
         {
-          htmlId: "email",
+          htmlId: 'email',
           id: 3,
-          name: "E-mail",
+          name: 'E-mail',
         },
         {
-          htmlId: "status",
+          htmlId: 'status',
           id: 4,
-          name: "Status",
+          name: 'Status',
         },
       ],
       eventBus: EventBus,
-      title: "",
-      message: "",
+      title: '',
+      message: '',
       showYesNoDialog: false,
       showManageUserDialog: false,
       isCreate: true
@@ -82,7 +83,7 @@ export default {
       selectedUser: 'selectedUser',
       users: 'users'
     }),
-    isCrudButtonsEnabled() {
+    isAnyNodeSelected() {
       return !!this.selectedUser;
     }
   },

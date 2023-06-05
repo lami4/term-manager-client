@@ -9,51 +9,51 @@
             @create-term-click="onCreateTermClick()"
             @edit-term-click="onEditTermClick()"
             @delete-term-click="onDeleteTermClick()"
+            @suggest-term-click="onSuggestTermClick()"
             @create-column-click="onCreateColumnClick()"
             @edit-column-click="onEditColumnClick()"
             @delete-column-click="onDeleteColumnClick()"
             @reorder-columns-click="onReorderColumnsClick()"/>
-        <div class="grid-wrapper">
-            <BaseGrid
-                :columns="columns"
-                :entries="terms"
-                @select-entry="updateSelectedTerm($event)"
-                @unselect-entry="updateSelectedTerm($event)"
-                @select-column="updateSelectedColumn($event)"
-                @unselect-column="updateSelectedColumn($event)"
-                :is-column-select-enabled="true"
-                :is-column-unselect-enabled="true"/>
-            <ManageTermDialog
-                :show="showManageTermDialog"
-                :is-create="isCreate"
-                :mode="manageTermDialogMode"
-                @create-term="onCreateTerm($event)"
-                @edit-term="onEditTerm($event)"
-                @close="showManageTermDialog = false"/>
-            <ManageColumnDialog
-                :show="showManageColumnDialog"
-                :is-create="isCreate"
-                @create-column="onCreateColumn($event)"
-                @edit-column="onEditColumn($event)"
-                @close="showManageColumnDialog = false"/>
-            <ReorderColumnsDialog
-                :show="showReorderColumnsDialog"
-                @close="showReorderColumnsDialog = false"
-                @reorder-columns="onReorderColumns($event)"/>
-            <YesNoDialogBox
-                :title="yesNoDialogTitle"
-                :message="yesNoDialogMessage"
-                :show="showYesNoDialog"
-                @close="showYesNoDialog = false"
-                :event-name="yesNoDialogEvent"
-                @delete-term="onDeleteTerm()"
-                @delete-column="onDeleteColumn()"/>
-            <SignInDialog
-                :show="showSignInDialog"
-                @submit="signIn($event)"
-                @close="showSignInDialog = false"/>
+        <BaseGrid
+            :columns="columns"
+            :entries="terms"
+            @select-entry="updateSelectedTerm($event)"
+            @unselect-entry="updateSelectedTerm($event)"
+            @select-column="updateSelectedColumn($event)"
+            @unselect-column="updateSelectedColumn($event)"
+            :is-column-select-enabled="true"
+            :is-column-unselect-enabled="true"/>
+        <ManageTermDialog
+            :show="showManageTermDialog"
+            :is-create="isCreate"
+            :mode="manageTermDialogMode"
+            @create-term="onCreateTerm($event)"
+            @edit-term="onEditTerm($event)"
+            @suggest-term="onSuggestTerm($event)"
+            @close="showManageTermDialog = false"/>
+        <ManageColumnDialog
+            :show="showManageColumnDialog"
+            :is-create="isCreate"
+            @create-column="onCreateColumn($event)"
+            @edit-column="onEditColumn($event)"
+            @close="showManageColumnDialog = false"/>
+        <ReorderColumnsDialog
+            :show="showReorderColumnsDialog"
+            @close="showReorderColumnsDialog = false"
+            @reorder-columns="onReorderColumns($event)"/>
+        <YesNoDialogBox
+            :title="yesNoDialogTitle"
+            :message="yesNoDialogMessage"
+            :show="showYesNoDialog"
+            @close="showYesNoDialog = false"
+            :event-name="yesNoDialogEvent"
+            @delete-term="onDeleteTerm()"
+            @delete-column="onDeleteColumn()"/>
+        <SignInDialog
+            :show="showSignInDialog"
+            @submit="signIn($event)"
+            @close="showSignInDialog = false"/>
         </div>
-    </div>
 </template>
 
 <script>
@@ -62,16 +62,18 @@ import BaseGrid from "../../components/BaseGrid.vue";
 import ManageColumnDialog from "./components/ManageColumnDialog.vue";
 import ManageTermDialog from "./components/ManageTermDialog.vue";
 import SignInDialog from "./components/SignInDialog.vue";
-import YesNoDialogBox from "../../components/YesNoDialogBox.vue";
+import YesNoDialogBox from "../../components/YesNoDialog.vue";
 import AuthenticationService from "../../services/AuthenticationService";
 import ReorderColumnsDialog from "./components/ReorderColumnsDialog";
 import {mapActions, mapState} from 'vuex';
 
-//TODO: Залить на гит оба проекта
 //TODO: Разобраться с рендерингом пользовательским дропдаун опций
-//TODO: Добавить тултипы для кнопок в тулбаре
-//TODO: Реализовать предложение новых терминов
+//TODO: Изменить стиль тултипов
+//TODO: Запилить кнопк обновления грида
 //TODO: Реализовать вспывающие уведомление при добавлении нового термина через вебсокет
+//TODO: Зарефакторить БЭМ -- там кое где неправильный синтаксис
+//TODO: Использовать HttpClient.js во всех сервисах
+//TODO: Пофиксить баг, когда для дропдауна не сетятся дефолтное значние при создании сущностей
 
 export default {
     name: 'TermManager',
@@ -121,6 +123,10 @@ export default {
             deleteTerm: 'deleteTerm',
             reorderColumns: 'reorderColumns'
         }),
+        ...mapActions('SuggestionManager', {
+            //TODO: PROPERLY RENAME ACTIONS
+            addSuggestion: 'addSuggestion',
+        }),
         signIn(userCredentials) {
             AuthenticationService.signIn(userCredentials).then(() => this.showSignInDialog = false);
         },
@@ -142,6 +148,11 @@ export default {
             this.yesNoDialogTitle = 'Delete term';
             this.yesNoDialogMessage = 'Are you sure you want to delete the selected term?'
             this.showYesNoDialog = true;
+        },
+        onSuggestTermClick() {
+            this.manageTermDialogMode = 'suggest-term';
+            this.isCreate = true;
+            this.showManageTermDialog = true;
         },
         onCreateColumnClick() {
             this.isCreate = true;
@@ -165,6 +176,9 @@ export default {
         },
         onEditTerm(term) {
             this.updateTerm(term).then(() => this.showManageTermDialog = false);
+        },
+        onSuggestTerm(suggestion) {
+            this.addSuggestion(suggestion).then(() => this.showManageTermDialog = false);
         },
         onDeleteTerm() {
             this.deleteTerm(this.selectedTerm);

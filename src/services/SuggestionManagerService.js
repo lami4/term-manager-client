@@ -1,19 +1,19 @@
-import axios from 'axios';
-
-const HTTP = axios.create({baseURL: 'http://localhost:4567'})
-HTTP.defaults.withCredentials = true;
+import httpClient from "./HttpClient";
 
 export default {
-    getSuggestions(uri) {
-        return HTTP.get(uri);
+    getSuggestions() {
+        return httpClient.get('/suggestions');
     },
-    addSuggestion(uri, payload) {
-        return HTTP.post(uri, payload);
+    addSuggestion(payload) {
+        return httpClient.post('/suggestions', payload);
     },
-    updateSuggestion(uri, payload) {
-        return HTTP.put(uri, payload);
+    updateSuggestion(payload) {
+        return httpClient.put('suggestions/' + payload.id, payload);
     },
-    deleteSuggestion(uri) {
-        return HTTP.delete(uri);
+    deleteSuggestion(payload) {
+        return httpClient.delete('suggestions/' + payload.id);
+    },
+    acceptSuggestion(payload) {
+        return httpClient.put(`suggestions/${payload.id}/accept`, payload);
     }
 }

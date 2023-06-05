@@ -63,7 +63,7 @@ export default {
         mode: {
             type: String,
             required: true,
-            validator: propValue => ['default', 'report', 'suggestion'].includes(propValue)
+            validator: propValue => ['default', 'suggest-term'].includes(propValue)
         }
     },
     data() {
@@ -76,25 +76,32 @@ export default {
             selectedTerm: 'selectedTerm',
             columns: "columns",
         }),
+        ...mapState('SuggestionManager', {
+            selectedSuggestion: "selectedSuggestion"
+        }),
         dialogTitle() {
             if (this.mode === 'default') {
-                return this.isCreate ? 'Create term' : 'Modify term';
-            } else if (this.mode === 'report') {
-                return 'Correct term';
+                return this.isCreate ? 'Create new term' : 'Modify term';
+            } else {
+                return this.isCreate ? 'Suggest new term' : 'Review suggested term';
             }
         },
         submitButtonLabel() {
             if (this.mode === 'default') {
                 return this.isCreate ? 'Create' : 'Apply';
-            } else if (this.mode === 'report') {
-                return 'Submit';
+            } else {
+                return this.isCreate ? 'Suggest' : 'Accept';
             }
         }
     },
     watch: {
         show(newValue) {
             if (newValue) {
-                this.term = this.isCreate ? new Term() : new Term(this.selectedTerm);
+                if (this.mode === 'default') {
+                    this.term = this.isCreate ? new Term() : new Term(this.selectedTerm);
+                } else {
+                    this.term = this.isCreate ? new Term() : new Term(this.selectedSuggestion);
+                }
             }
         }
     },
@@ -104,49 +111,12 @@ export default {
                 if (isValid) {
                     if (this.mode === 'default') {
                         this.$emit(this.isCreate ? 'create-term' : 'edit-term', this.term);
-                    } else if (this.mode === 'report') {
-                        this.$emit('correct-term', this.term);
+                    } else {
+                        this.$emit(this.isCreate ? 'suggest-term' : 'accept-term', this.term);
                     }
                 }
             });
-            //
-            // if (this.isSuggestion) {
-            //     this.addSuggestionAction(this.prepareSuggestion(this.term.properties, true, null)).finally(() => {
-            //         this.show = false;
-            //     });
-            //     return;
-            // }
-            // if (this.isCorrection) {
-            //     this.addSuggestionAction(this.prepareSuggestion(this.term.properties, false, this.term.id)).finally(() => {
-            //         this.show = false;
-            //     });
-            //     return;
-            // }
-            // if (this.isCreate) {
-            //     this.addTermAction(this.term).finally(() => {
-            //         this.show = false;
-            //     });
-            // } else {
-            //     this.updateTermAction(this.term).finally(() => {
-            //         this.show = false;
-            //     });
-            // }
         },
-        // prepareSuggestion(properties, isNew, termId) {
-        //     return new Suggestion({"properties": properties, "isNew": isNew, "termId": termId});
-        // },
-        // deepCopyTerm() {
-        //     this.term = new Term({id: this.selectedTerm.id});
-        //     this.columns.forEach(column => {
-        //         this.term.properties[column.htmlId] = this.selectedTerm.properties[column.htmlId];
-        //     });
-        // },
-        // createNewTerm() {
-        //     this.term = new Term();
-        //     this.columns.forEach(column => {
-        //         this.term.properties[column.htmlId] = null;
-        //     });
-        // }
     }
 }
 </script>
