@@ -19,8 +19,8 @@
                 :data-entry-id="entry.id"
                 @click="selectEntry($event, entry)">
                 <td v-for="column in columns" :key="column.id" :data-column-id="column.htmlId">
-                    <slot name="bodyCell" v-bind:value="entry.properties ? entry.properties[column.htmlId] : entry[column.htmlId]">
-                        {{entry.properties ? entry.properties[column.htmlId] : entry[column.htmlId]}}
+                    <slot name="bodyCell" v-bind:value="entry">
+                        {{cellRenderer(column, entry)}}
                     </slot>
                 </td>
             </tr>
@@ -31,7 +31,6 @@
 
 
 <script>
-//TODO: DESIGN DIALOG BOX AND INPUTS
 //REFACTOR: CONTROLLER FOR LESS
 export default {
     name: "BaseGrid",
@@ -69,6 +68,15 @@ export default {
         return {
             selectedTr: null,
             selectedTh: null,
+        }
+    },
+    computed: {
+        labels() {
+            return Object.fromEntries(
+                this.columns.map(column => [column.htmlId, Object.fromEntries(
+                    column.dropdownOptions.map(option => [option.id, option.name]))]
+                )
+            );
         }
     },
     methods: {
@@ -125,6 +133,15 @@ export default {
                 this.$emit('unselect-entry', null);
                 this.$emit('select-column', column);
             }
+        },
+        cellRenderer(column, entry) {
+            if (this.isDropdownOption(column)) {
+                return this.labels[column.htmlId][entry.properties[column.htmlId]];
+            }
+            return entry.properties ? entry.properties[column.htmlId] : entry[column.htmlId];
+        },
+        isDropdownOption(column) {
+            return column.elementType === 'SELECT';
         }
     }
 }

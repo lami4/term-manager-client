@@ -1,22 +1,19 @@
-import axios from 'axios';
-
-const HTTP = axios.create({baseURL: 'http://localhost:4567'})
-HTTP.defaults.withCredentials = true;
+import httpClient from "./HttpClient";
 
 export default {
-    getUsers(uri) {
-        return HTTP.get(uri);
+    getUsers() {
+        return httpClient.get('/users');
     },
-    addUser(uri, payload) {
-        return HTTP.post(uri, payload);
+    addUser(payload) {
+        return httpClient.post('/users', payload);
     },
-    updateUser(uri, payload) {
-        return HTTP.put(uri, payload);
+    updateUser(payload) {
+        return httpClient.put('/users/' + payload.id, payload);
     },
-    deleteUser(uri) {
-        return HTTP.delete(uri);
+    deleteUser(payload) {
+        return httpClient.delete('/users/' + payload.id);
     },
-    getPrivileges(uri) {
-        return HTTP.get(uri);
+    getPrivileges() {
+        return httpClient.get('/privileges');
     }
 }

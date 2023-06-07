@@ -8,12 +8,12 @@ export default {
         return httpClient.post('/suggestions', payload);
     },
     updateSuggestion(payload) {
-        return httpClient.put('suggestions/' + payload.id, payload);
+        return httpClient.put('/suggestions/' + payload.id, payload);
     },
     deleteSuggestion(payload) {
-        return httpClient.delete('suggestions/' + payload.id);
+        return httpClient.delete('/suggestions/' + payload.id);
     },
     acceptSuggestion(payload) {
-        return httpClient.put(`suggestions/${payload.id}/accept`, payload);
+        return httpClient.put(`/suggestions/${payload.id}/accept`, payload);
     }
 }

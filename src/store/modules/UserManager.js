@@ -14,7 +14,7 @@ export const actions = {
         commit('SET_SELECTED_USER', user);
     },
     getUsers({ commit, dispatch }) {
-        return UserManagerService.getUsers('/users')
+        return UserManagerService.getUsers()
             .then(response => {
                 commit('SET_USERS', response.data);
             })
@@ -23,7 +23,7 @@ export const actions = {
             })
     },
     addUser({ commit, dispatch }, payload) {
-        return UserManagerService.addUser('users', payload)
+        return UserManagerService.addUser(payload)
             .then(() => {
                 showNotification('success', 'User was successfully added!', dispatch, true);
                 dispatch('getUsers');
@@ -33,7 +33,7 @@ export const actions = {
             })
     },
     updateUser({ commit, dispatch, state }, payload) {
-        return UserManagerService.updateUser('users/' + payload.id, payload)
+        return UserManagerService.updateUser(payload)
             .then(() => {
                 showNotification('success', 'User was successfully updated!', dispatch, true);
                 dispatch('updateSelectedUser', payload);
@@ -43,7 +43,7 @@ export const actions = {
             })
     },
     deleteUser({ commit, dispatch }, payload) {
-        return UserManagerService.deleteUser('users/' + payload.id)
+        return UserManagerService.deleteUser(payload)
             .then(() => {
                 showNotification('success', 'User was successfully deleted!', dispatch, true);
                 dispatch('updateSelectedUser', null);
@@ -54,7 +54,7 @@ export const actions = {
             })
     },
     getPrivileges({ commit, dispatch }) {
-        return UserManagerService.getPrivileges('/privileges')
+        return UserManagerService.getPrivileges()
             .then(response => {
                 commit('SET_PRIVILEGES', response.data);
             })

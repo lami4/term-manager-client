@@ -19,7 +19,7 @@ export const actions = {
         commit('SET_SELECTED_COLUMN', column);
     },
     getTerms({ commit, dispatch }) {
-        return TermGridService.getTerms('/terms')
+        return TermGridService.getTerms()
             .then(response => {
                 commit('SET_TERMS', response.data);
             })
@@ -28,7 +28,7 @@ export const actions = {
             })
     },
     addTerm({dispatch}, payload) {
-        return TermGridService.addTerm('terms', payload)
+        return TermGridService.addTerm( payload)
             .then(() => {
                 showNotification('success', 'Term was successfully added!', dispatch, true);
                 dispatch("getTerms");
@@ -38,7 +38,7 @@ export const actions = {
             })
     },
     updateTerm({dispatch, state}, payload) {
-        return TermGridService.updateTerm('/terms/' + payload.id, payload)
+        return TermGridService.updateTerm(payload)
             .then(() => {
                 showNotification('success', 'Term was successfully updated!', dispatch, true);
                 dispatch('updateSelectedTerm', payload);
@@ -48,7 +48,7 @@ export const actions = {
             })
     },
     deleteTerm({state, dispatch}, payload) {
-        return TermGridService.deleteTerm('terms/' + payload.id)
+        return TermGridService.deleteTerm(payload)
             .then(() => {
                 showNotification('success', 'Term was successfully deleted!', dispatch, true);
                 dispatch('updateSelectedTerm', null);
@@ -59,7 +59,7 @@ export const actions = {
             })
     },
     getColumns({ commit, dispatch }) {
-        return TermGridService.getColumns('/columns')
+        return TermGridService.getColumns()
             .then(response => {
                 response.data.sort((a, b) => a.position - b.position);
                 response.data.forEach(column => {
@@ -72,7 +72,7 @@ export const actions = {
             })
     },
     addColumn({dispatch}, payload) {
-        return TermGridService.addColumn('/columns', payload)
+        return TermGridService.addColumn(payload)
             .then(() => {
                 dispatch('getColumns');
                 dispatch('getTerms');
@@ -82,7 +82,7 @@ export const actions = {
             })
     },
     updateColumn({state, dispatch, commit}, payload) {
-        return TermGridService.updateColumn('/columns/' +payload.id, payload)
+        return TermGridService.updateColumn(payload)
             .then(() => {
                 showNotification('success', 'Column was successfully updated!', dispatch, true);
                 commit('UPDATE_COLUMN', payload);
@@ -93,7 +93,7 @@ export const actions = {
             })
     },
     deleteColumn({state, dispatch, commit}, payload) {
-        return TermGridService.deleteColumn('/columns/' + payload.id)
+        return TermGridService.deleteColumn(payload)
             .then(() => {
                 showNotification('success', 'Column was successfully deleted!', dispatch, true);
                 // commit('REMOVE_PROPERTY_FROM_TERMS', state.selectedColumn);
@@ -105,7 +105,7 @@ export const actions = {
             })
     },
     reorderColumns({state, dispatch, commit}, payload) {
-        return TermGridService.reorderColumns('/columns/reorder', payload)
+        return TermGridService.reorderColumns(payload)
             .then(() => {
                 dispatch('getColumns');
             })

@@ -1,7 +1,7 @@
 <template>
     <div class="base-dropdown">
         <p class="base-dropdown-label">{{ label }}</p>
-        <select class="base-dropdown-element" :value="localValue" @input="$emit('input', $event.target.value)">
+        <select class="base-dropdown-element" :value="value" @input="$emit('input', $event.target.value)">
             <option v-for="option in options" :key="option.id" :value="option.id">
                 {{ option.name }}
             </option>
@@ -23,9 +23,14 @@ export default {
             required: true
         }
     },
-    computed: {
-        localValue() {
-            return this.value ? this.value : this.options[0].id;
+    watch: {
+        value: {
+            immediate: true,
+            handler(newVal) {
+                if (newVal === undefined) {
+                    this.$emit('input', this.options[0].id);
+                }
+            }
         }
     }
 }

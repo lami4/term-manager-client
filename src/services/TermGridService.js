@@ -1,37 +1,31 @@
-import axios from 'axios';
-
-const HTTP = axios.create({baseURL: 'http://localhost:4567'})
-HTTP.defaults.withCredentials = true;
+import httpClient from "./HttpClient";
 
 export default {
-    getTerms(uri) {
-        return HTTP.get(uri);
+    getTerms() {
+        return httpClient.get('/terms');
     },
-    addTerm(uri, payload) {
-        return HTTP.post(uri, payload);
+    addTerm(payload) {
+        return httpClient.post('/terms', payload);
     },
-    updateTerm(uri, payload) {
-        return HTTP.put(uri, payload);
+    updateTerm(payload) {
+        return httpClient.put('/terms/' + payload.id, payload);
     },
-    deleteTerm(uri) {
-        return HTTP.delete(uri);
+    deleteTerm(payload) {
+        return httpClient.delete('/terms/' + payload.id);
     },
-    getColumns(uri) {
-        return HTTP.get(uri);
+    getColumns() {
+        return httpClient.get('/columns');
     },
-    addColumn(uri, payload) {
-        return HTTP.post(uri, payload);
+    addColumn(payload) {
+        return httpClient.post('/columns', payload);
     },
-    updateColumn(uri, payload) {
-        return HTTP.put(uri, payload);
+    updateColumn(payload) {
+        return httpClient.put('/columns/' + payload.id, payload);
     },
-    deleteColumn(uri) {
-        return HTTP.delete(uri);
+    deleteColumn(payload) {
+        return httpClient.delete('/columns/' + payload.id);
     },
-    reorderColumns(uri, payload) {
-        return HTTP.post(uri, payload);
-    },
-    addSuggestion(uri, payload) {
-        return HTTP.post(uri, payload);
+    reorderColumns(payload) {
+        return httpClient.post('/columns/reorder', payload);
     }
 }

@@ -67,14 +67,11 @@ import AuthenticationService from "../../services/AuthenticationService";
 import ReorderColumnsDialog from "./components/ReorderColumnsDialog";
 import {mapActions, mapState} from 'vuex';
 
-//TODO: Разобраться с рендерингом пользовательским дропдаун опций
 //TODO: Изменить стиль тултипов
 //TODO: Запилить кнопк обновления грида
 //TODO: Реализовать вспывающие уведомление при добавлении нового термина через вебсокет
 //TODO: Зарефакторить БЭМ -- там кое где неправильный синтаксис
 //TODO: Использовать HttpClient.js во всех сервисах
-//TODO: Пофиксить баг, когда для дропдауна не сетятся дефолтное значние при создании сущностей
-
 export default {
     name: 'TermManager',
     components: {
