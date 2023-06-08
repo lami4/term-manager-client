@@ -38,6 +38,7 @@
                 :is-required="true"/>
             <ReorderableList
                 key="parameter-6"
+                :mapper="mapper"
                 v-if="column.elementType === 'SELECT'"
                 v-model="column.dropdownOptions"
                 label="Dropdown options"/>
@@ -51,7 +52,7 @@ import ReorderableList from "../../../components/SortableList/ReorderableList";
 import Column from "../domain/Column.js"
 import ElementType from "../../TermManager/domain/ElementType";
 import {mapActions, mapState} from "vuex";
-
+import ColumnDropdownOption from "../domain/ColumnDropdownOption";
 export default {
     name: "ManageColumnDialog",
     components: {
@@ -107,6 +108,9 @@ export default {
                     this.$emit(this.isCreate ? 'create-column' : 'edit-column', this.column);
                 }
             });
+        },
+        mapper(reorderableItems) {
+            return reorderableItems.map(item => new ColumnDropdownOption({columnId: this.selectedColumn.id ,...item}));
         }
     }
 }

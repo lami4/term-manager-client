@@ -1,6 +1,5 @@
 import {showNotification, handleError} from "../../helpers/GenericHelper.js"
 import TermGridService from "../../services/TermGridService";
-import UserManagerService from "../../services/UserManagerService";
 
 export const namespaced = true
 
@@ -18,45 +17,8 @@ export const actions = {
     updateSelectedColumn({ commit }, column) {
         commit('SET_SELECTED_COLUMN', column);
     },
-    getTerms({ commit, dispatch }) {
-        return TermGridService.getTerms()
-            .then(response => {
-                commit('SET_TERMS', response.data);
-            })
-            .catch(error => {
-                handleError('error', 'Cannot fetch terms from the database!', 'getTerms', error, dispatch, true);
-            })
-    },
-    addTerm({dispatch}, payload) {
-        return TermGridService.addTerm( payload)
-            .then(() => {
-                showNotification('success', 'Term was successfully added!', dispatch, true);
-                dispatch("getTerms");
-            })
-            .catch(error => {
-                handleError('error', 'Cannot add term!', 'addTerm', error, dispatch, true);
-            })
-    },
-    updateTerm({dispatch, state}, payload) {
-        return TermGridService.updateTerm(payload)
-            .then(() => {
-                showNotification('success', 'Term was successfully updated!', dispatch, true);
-                dispatch('updateSelectedTerm', payload);
-            })
-            .catch(error => {
-                handleError('error', 'Cannot update term!', 'updateTerm', error, dispatch, true);
-            })
-    },
-    deleteTerm({state, dispatch}, payload) {
-        return TermGridService.deleteTerm(payload)
-            .then(() => {
-                showNotification('success', 'Term was successfully deleted!', dispatch, true);
-                dispatch('updateSelectedTerm', null);
-                dispatch("getTerms");
-            })
-            .catch(error => {
-                handleError('error', 'Cannot delete term!', 'deleteTerm', error, dispatch, true);
-            })
+    updateTerms({ commit }, terms) {
+        commit('SET_TERMS', terms);
     },
     getColumns({ commit, dispatch }) {
         return TermGridService.getColumns()
@@ -138,13 +100,5 @@ export const mutations = {
     DELETE_COLUMN(state, column) {
         state.columns.splice(state.columns.findIndex(item => item.id === column.id), 1);
         state.selectedColumn = null;
-    },
-    // UPDATE_COLUMN_ORDER(state, columnOrderSettings) {
-    //     state.columns.forEach(column => {
-    //         column.position = columnOrderSettings[column.id];
-    //     })
-    // },
-    // REMOVE_PROPERTY_FROM_TERMS(state, column) {
-    //     state.terms.forEach(item => delete item[column.htmlId]);
-    // }
+    }
 }

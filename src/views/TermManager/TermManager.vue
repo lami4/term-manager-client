@@ -65,13 +65,16 @@ import SignInDialog from "./components/SignInDialog.vue";
 import YesNoDialogBox from "../../components/YesNoDialog.vue";
 import AuthenticationService from "../../services/AuthenticationService";
 import ReorderColumnsDialog from "./components/ReorderColumnsDialog";
+import TermGridService from "../../services/TermGridService";
 import {mapActions, mapState} from 'vuex';
 
 //TODO: Изменить стиль тултипов
 //TODO: Запилить кнопк обновления грида
 //TODO: Реализовать вспывающие уведомление при добавлении нового термина через вебсокет
 //TODO: Зарефакторить БЭМ -- там кое где неправильный синтаксис
-//TODO: Использовать HttpClient.js во всех сервисах
+//TODO: Перенести отправку запроса и его обработку в сервисные слой из Storage
+//TODO: ПРотестировать весь функионал и наладить правильное обновление грида
+//TODO: Сделать нормальную проверку на уникальность имени колонки
 export default {
     name: 'TermManager',
     components: {
@@ -115,9 +118,6 @@ export default {
             addColumn: 'addColumn',
             updateColumn: 'updateColumn',
             deleteColumn: 'deleteColumn',
-            addTerm: 'addTerm',
-            updateTerm: 'updateTerm',
-            deleteTerm: 'deleteTerm',
             reorderColumns: 'reorderColumns'
         }),
         ...mapActions('SuggestionManager', {
@@ -169,16 +169,16 @@ export default {
             this.showReorderColumnsDialog = true;
         },
         onCreateTerm(term) {
-            this.addTerm(term).then(() => this.showManageTermDialog = false);
+            TermGridService.addTerm(term).then(() => this.showManageTermDialog = false);
         },
         onEditTerm(term) {
-            this.updateTerm(term).then(() => this.showManageTermDialog = false);
+            TermGridService.updateTerm(term).then(() => this.showManageTermDialog = false);
         },
         onSuggestTerm(suggestion) {
             this.addSuggestion(suggestion).then(() => this.showManageTermDialog = false);
         },
         onDeleteTerm() {
-            this.deleteTerm(this.selectedTerm);
+            TermGridService.deleteTerm(this.selectedTerm);
         },
         onCreateColumn(column) {
             this.addColumn(column).then(() => this.showManageColumnDialog = false);
@@ -194,7 +194,7 @@ export default {
         }
     },
     mounted() {
-        this.getTerms();
+        TermGridService.getTerms();
         this.getColumns();
     },
     beforeCreate() {

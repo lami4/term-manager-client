@@ -1,4 +1,4 @@
-import ReorderableItemModel from "../../../components/SortableList/domain/ReorderableItem";
+import ColumnDropdownOption from "./ColumnDropdownOption";
 
 export default class Column {
     constructor(options = {}) {
@@ -11,7 +11,7 @@ export default class Column {
         this.elementType = options.elementType || 'SELECT';
         this.mandatory = options.mandatory || false;
         if (options.dropdownOptions) {
-            this.dropdownOptions = options.dropdownOptions.map(option => new ReorderableItemModel(option));
+            this.dropdownOptions = options.dropdownOptions.map(option => new ColumnDropdownOption(option));
         } else {
             this.dropdownOptions = [];
         }

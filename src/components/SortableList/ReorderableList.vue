@@ -68,6 +68,10 @@ export default {
         label: {
             type: String,
             required: false
+        },
+        mapper: {
+            required: false,
+            type: Function
         }
     },
     data() {
@@ -92,19 +96,28 @@ export default {
                 this.element.position = this.localItems.length;
                 this.localItems.push(this.element);
                 this.element = new ReorderableItemModel();
-                this.$emit('update:items', this.localItems);
+                this.emitUpdate();
+                // this.$emit('update:items', this.localItems);
             });
         },
         onDeleteItem(event, index) {
             this.localItems.splice(index, 1);
-            this.$emit('update:items', this.localItems);
+            this.emitUpdate();
+            // this.$emit('update:items', this.localItems);
         },
         onItemInput() {
-            this.$emit('update:items', this.localItems);
+            this.emitUpdate();
+            // this.$emit('update:items', this.localItems);
         },
         onDragEnd() {
             this.localItems.forEach((item, index) => item.position = index);
-            this.$emit('update:items', this.localItems);
+            this.emitUpdate();
+            // this.$emit('update:items', this.localItems);
+        },
+        emitUpdate() {
+            if (this.mapper) {
+                this.$emit('update:items', this.mapper ? this.mapper(this.localItems) : this.localItems);
+            }
         }
     }
 }

@@ -42,6 +42,13 @@ export default {
             default: 600
         }
     },
+    watch: {
+        show(newValue) {
+            if (!newValue) {
+                this.$refs.observer.reset();
+            }
+        }
+    },
     methods: {
         validate() {
             this.$refs.observer.reset();

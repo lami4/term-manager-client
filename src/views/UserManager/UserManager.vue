@@ -37,6 +37,7 @@ import CreateEditUserDialogBox from './components/ManageUserDialog.vue';
 import YesNoDialogBox from '../../components/YesNoDialog';
 import Toolbar from '../../components/Toolbar';
 import {mapActions, mapState} from 'vuex';
+import UserManagerService from "../../services/UserManagerService";
 
 export default {
   name: 'UserManager',
@@ -89,12 +90,7 @@ export default {
   },
   methods: {
     ...mapActions('UserManager', {
-      getUsers: 'getUsers',
       updateSelectedUser: 'updateSelectedUser',
-      getPrivileges: 'getPrivileges',
-      addUser: 'addUser',
-      updateUser: 'updateUser',
-      deleteUser: 'deleteUser'
     }),
     onCreateUserClick() {
       this.isCreate = true;
@@ -108,18 +104,18 @@ export default {
       this.showYesNoDialog = true;
     },
     onCreateUser(user) {
-      this.addUser(user).then(() => this.showManageUserDialog = false);
+        UserManagerService.addUser(user).then(() => this.showManageUserDialog = false);
     },
     onEditUser(user) {
-      this.updateUser(user).then(() => this.showManageUserDialog = false);
+        UserManagerService.updateUser(user).then(() => this.showManageUserDialog = false);
     },
     onDeleteUser() {
-      this.deleteUser(this.selectedUser);
+        UserManagerService.deleteUser(this.selectedUser);
     }
   },
   mounted() {
-    this.getUsers();
-    this.getPrivileges();
+      UserManagerService.getUsers();
+      UserManagerService.getPrivileges();
   }
 }
 </script>
