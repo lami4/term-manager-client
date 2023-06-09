@@ -97,22 +97,18 @@ export default {
                 this.localItems.push(this.element);
                 this.element = new ReorderableItemModel();
                 this.emitUpdate();
-                // this.$emit('update:items', this.localItems);
             });
         },
         onDeleteItem(event, index) {
             this.localItems.splice(index, 1);
             this.emitUpdate();
-            // this.$emit('update:items', this.localItems);
         },
         onItemInput() {
             this.emitUpdate();
-            // this.$emit('update:items', this.localItems);
         },
         onDragEnd() {
             this.localItems.forEach((item, index) => item.position = index);
             this.emitUpdate();
-            // this.$emit('update:items', this.localItems);
         },
         emitUpdate() {
             if (this.mapper) {

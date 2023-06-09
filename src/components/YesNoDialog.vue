@@ -17,7 +17,6 @@
 
 <script>
 import BaseDialog from './BaseDialog';
-import EventBus from "../eventBus/eventBus"
 export default {
     name: "YesNoDialog",
     components: {

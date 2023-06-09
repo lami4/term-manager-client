@@ -28,7 +28,7 @@ export default {
             immediate: true,
             handler(newVal) {
                 if (newVal === undefined) {
-                    this.$emit('input', this.options[0].id);
+                    this.$emit('input', this.options[0]?.id);
                 }
             }
         }

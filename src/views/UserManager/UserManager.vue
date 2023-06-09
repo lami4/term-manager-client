@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import EventBus from '../../eventBus/eventBus.js';
 import BaseGrid from '../../components/BaseGrid.vue';
 import CreateEditUserDialogBox from './components/ManageUserDialog.vue';
 import YesNoDialogBox from '../../components/YesNoDialog';
@@ -71,7 +70,6 @@ export default {
           name: 'Status',
         },
       ],
-      eventBus: EventBus,
       title: '',
       message: '',
       showYesNoDialog: false,

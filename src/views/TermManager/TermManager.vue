@@ -74,7 +74,9 @@ import {mapActions, mapState} from 'vuex';
 //TODO: Зарефакторить БЭМ -- там кое где неправильный синтаксис
 //TODO: Перенести отправку запроса и его обработку в сервисные слой из Storage
 //TODO: ПРотестировать весь функионал и наладить правильное обновление грида
-//TODO: Сделать нормальную проверку на уникальность имени колонки
+//TODO: Изменить стиль уведомлений всплывающих
+//TODO: Доразобраться с привилегиями и рендерить объекты в зависимости от назначенных привилегий
+//TODO: ПЕРЕСТАЛ РАБОТАТЬ ИЗМЕНЕНИЕ ПОРЯДКА КОЛОНОК!!! ПОФИКСИТЬ СРОЧНО!
 export default {
     name: 'TermManager',
     components: {
@@ -110,18 +112,10 @@ export default {
     },
     methods: {
         ...mapActions('TermManager', {
-            //TODO: PROPERLY RENAME ACTIONS
-            getTerms: 'getTerms',
-            getColumns: 'getColumns',
             updateSelectedTerm: 'updateSelectedTerm',
-            updateSelectedColumn: 'updateSelectedColumn',
-            addColumn: 'addColumn',
-            updateColumn: 'updateColumn',
-            deleteColumn: 'deleteColumn',
-            reorderColumns: 'reorderColumns'
+            updateSelectedColumn: 'updateSelectedColumn'
         }),
         ...mapActions('SuggestionManager', {
-            //TODO: PROPERLY RENAME ACTIONS
             addSuggestion: 'addSuggestion',
         }),
         signIn(userCredentials) {
@@ -181,21 +175,21 @@ export default {
             TermGridService.deleteTerm(this.selectedTerm);
         },
         onCreateColumn(column) {
-            this.addColumn(column).then(() => this.showManageColumnDialog = false);
+            TermGridService.addColumn(column).then(() => this.showManageColumnDialog = false);
         },
         onEditColumn(column) {
-            this.updateColumn(column).then(() => this.showManageColumnDialog = false);
+            TermGridService.updateColumn(column).then(() => this.showManageColumnDialog = false);
         },
         onDeleteColumn() {
-            this.deleteColumn(this.selectedColumn)
+            TermGridService.deleteColumn(this.selectedColumn);
         },
         onReorderColumns(reorderSettings) {
-            this.reorderColumns(reorderSettings).then(() => this.showReorderColumnsDialog = false);
+            TermGridService.reorderColumns(reorderSettings).then(() => this.showReorderColumnsDialog = false);
         }
     },
     mounted() {
         TermGridService.getTerms();
-        this.getColumns();
+        TermGridService.getColumns();
     },
     beforeCreate() {
         AuthenticationService.validateSession();

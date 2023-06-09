@@ -19,7 +19,13 @@ extend('required', {
 });
 
 extend('isColumnNameUnique', {
-  validate: (value, columns) => !columns.find(item => item.name === value),
+  validate: (value, validationData) => {
+    if (validationData.originalName && validationData.originalName === value) {
+      return true;
+    }
+    return !validationData.columns.find(item => item.name === value);
+  },
+  params: ['columns', 'originalName'],
   message: 'This name is not unique'
 });
 

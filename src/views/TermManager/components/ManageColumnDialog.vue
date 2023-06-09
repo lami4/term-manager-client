@@ -13,7 +13,7 @@
                 label="Column name"
                 v-model="column.name"
                 :is-required="true"
-                :validation-rules="{isColumnNameUnique: columns}"/>
+                :validation-rules="uniqueNameRule"/>
             <BaseCheckbox
                 class="dialogbox_base-dropdown"
                 key="parameter-2"
@@ -88,6 +88,14 @@ export default {
         },
         elementTypes() {
             return ElementType.elementTypes;
+        },
+        uniqueNameRule() {
+            return {
+                isColumnNameUnique: {
+                    columns: this.columns,
+                    originalName: this.isCreate ? null : this.selectedColumn?.name
+                }
+            }
         }
     },
     watch: {

@@ -42,10 +42,8 @@
 
 <script>
 import BaseDialog from "../../../components/BaseDialog";
-import {mapActions, mapState} from "vuex";
-import EventBus from "../../../eventBus/eventBus";
+import {mapState} from "vuex";
 import Term from "../domain/Term.js";
-import Suggestion from "../domain/Suggestion.js";
 export default {
     name: "ManageTermDialog",
     components: {

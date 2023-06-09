@@ -52,10 +52,8 @@
 
 <script>
 import BaseDialog from "../../../components/BaseDialog";
-import {mapActions, mapState} from "vuex";
-import EventBus from '../../../eventBus/eventBus.js';
+import {mapState} from "vuex";
 import User from "../domain/User.js"
-import Term from "../../TermManager/domain/Term";
 export default {
     name: "ManageUserDialog",
     components: {
