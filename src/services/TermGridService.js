@@ -1,6 +1,7 @@
 import httpClient from "./HttpClient";
 import {handleError, showNotification} from "../helpers/GenericHelper";
 import store from '../store/index';
+import NotificationType from "../components/Notificater/domain/NotificationType";
 
 export default {
     getTerms() {
@@ -9,39 +10,39 @@ export default {
                 store.dispatch('TermManager/updateTerms', response.data);
             })
             .catch(error => {
-                handleError('error', 'Cannot fetch terms from the database!', 'getTerms', error, store.dispatch, true);
+                handleError('Cannot fetch terms from the database!', 'getTerms', error);
             });
     },
     addTerm(payload) {
         return httpClient.post('/terms', payload)
             .then(() => {
-                showNotification('success', 'Term was successfully added!', store.dispatch, true);
+                showNotification(NotificationType.SUCCESS, 'Term was successfully added!');
                 this.getTerms();
             })
             .catch(error => {
-                handleError('error', 'Cannot add term!', 'addTerm', error, store.dispatch, true);
+                handleError('Cannot add term!', 'addTerm', error);
             });
     },
     updateTerm(payload) {
         return httpClient.put('/terms/' + payload.id, payload)
             .then(response => {
-                showNotification('success', 'Term was successfully updated!', store.dispatch, true);
+                showNotification(NotificationType.SUCCESS, 'Term was successfully updated!');
                 store.dispatch('TermManager/updateSelectedTerm', response.data);
                 store.dispatch('TermManager/replaceTerm', response.data);
             })
             .catch(error => {
-                handleError('error', 'Cannot update term!', 'updateTerm', error, store.dispatch, true);
+                handleError('Cannot update term!', 'updateTerm', error);
             });
     },
     deleteTerm(payload) {
         return httpClient.delete('/terms/' + payload.id)
             .then(() => {
-                showNotification('success', 'Term was successfully deleted!', store.dispatch, true);
+                showNotification(NotificationType.SUCCESS, 'Term was successfully deleted!');
                 store.dispatch('TermManager/updateSelectedTerm', null);
                 this.getTerms();
             })
             .catch(error => {
-                handleError('error', 'Cannot delete term!', 'deleteTerm', error, store.dispatch, true);
+                handleError('Cannot delete term!', 'deleteTerm', error);
             });
     },
     getColumns() {
@@ -54,7 +55,7 @@ export default {
                 store.dispatch('TermManager/updateColumns', response.data);
             })
             .catch(error => {
-                handleError('error', 'Cannot fetch columns from the database!', 'getColumns', error, store.dispatch, true);
+                handleError('Cannot fetch columns from the database!', 'getColumns', error);
             });
     },
     addColumn(payload) {
@@ -64,31 +65,31 @@ export default {
                 this.getTerms();
             })
             .catch(error => {
-                handleError('error', 'Cannot add column!', 'addColumn', error, store.dispatch, true);
+                handleError('Cannot add column!', 'addColumn', error);
             });
     },
     updateColumn(payload) {
         return httpClient.put('/columns/' + payload.id, payload)
             .then(response => {
-                showNotification('success', 'Column was successfully updated!', store.dispatch, true);
+                showNotification(NotificationType.SUCCESS, 'Column was successfully updated!');
                 store.dispatch('TermManager/updateSelectedColumn', response.data);
                 store.dispatch('TermManager/replaceColumn', response.data);
             })
             .catch(error => {
-                handleError('error', 'Cannot update column!', 'updateColumn', error, store.dispatch, true);
+                handleError('Cannot update column!', 'updateColumn', error);
             });
     },
     deleteColumn(payload) {
         return httpClient.delete('/columns/' + payload.id)
             .then(() => {
-                showNotification('success', 'Column was successfully deleted!', store.dispatch, true);
+                showNotification(NotificationType.SUCCESS, 'Column was successfully deleted!');
                 store.dispatch('TermManager/updateSelectedTerm', null);
                 store.dispatch('TermManager/updateSelectedColumn', null);
                 this.getColumns();
                 this.getTerms();
             })
             .catch(error => {
-                handleError('error', 'Cannot delete column!', 'deleteColumn', error, store.dispatch, true);
+                handleError('Cannot delete column!', 'deleteColumn', error);
             });
     },
     reorderColumns(payload) {
@@ -97,10 +98,10 @@ export default {
                 return this.getColumns();
             })
             .then(() => {
-                showNotification('success', 'Columns were successfully reordered!', store.dispatch, true);
+                showNotification(NotificationType.SUCCESS, 'Columns were successfully reordered!');
             })
             .catch(error => {
-                handleError('error', 'Cannot reorder columns!', 'reorderColumns', error, store.dispatch, true);
+                handleError('Cannot reorder columns!', 'reorderColumns', error);
             });
     }
 }

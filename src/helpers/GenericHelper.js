@@ -1,12 +1,15 @@
-export function showNotification(type, message, dispatch, isRoot) {
+import store from '../store/index';
+import NotificationType from "../components/Notificater/domain/NotificationType";
+
+export function showNotification(type, message) {
     let notification = {
         type: type,
         message: message
     }
-    dispatch('notification/add', notification, {root: isRoot})
+    store.dispatch('notification/add', notification);
 }
 
-export function handleError(type, message, action, error, dispatch, isRoot) {
-    showNotification(type, message, dispatch, isRoot);
-    console.error("Error while performing '" + action + "' action: " + error.message)
+export function handleError(message, action, error) {
+    showNotification(NotificationType.ERROR, message);
+    console.error("Error while performing '" + action + "' action: " + error.message);
 }

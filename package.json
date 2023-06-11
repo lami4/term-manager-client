@@ -9,7 +9,6 @@
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
-    "diff2html-cli": "^5.1.11",
     "floating-vue": "^1.0.0-beta.19",
     "vee-validate": "^3.4.13",
     "vue": "^2.6.11",

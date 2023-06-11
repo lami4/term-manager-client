@@ -1,7 +1,7 @@
 <template>
     <ValidationProvider :rules="{required: isRequired, ...validationRules}" v-slot="{ errors }" slim>
         <div class="base-input">
-            <p class="base-input-label">{{ label }}</p>
+            <p class="base-input-label">{{ label + asterisk}}</p>
                 <input
                     v-tooltip.right="{content: errors[0], shown: errors.length > 0, showTriggers: [], hideTriggers: ['click'], delay: {show: 0, hidden: 300}, autoHide: false}"
                     :class="['base-input-element', {'base-input-element_invalid':errors.length > 0}]"
@@ -33,6 +33,11 @@ export default {
         validationRules: {
             type: Object,
             required: false
+        }
+    },
+    computed: {
+        asterisk() {
+            return this.isRequired ? ' *' : '';
         }
     }
 }

@@ -66,17 +66,17 @@ import YesNoDialogBox from "../../components/YesNoDialog.vue";
 import AuthenticationService from "../../services/AuthenticationService";
 import ReorderColumnsDialog from "./components/ReorderColumnsDialog";
 import TermGridService from "../../services/TermGridService";
+import SuggestionManagerService from "../../services/SuggestionManagerService";
 import {mapActions, mapState} from 'vuex';
 
 //TODO: Изменить стиль тултипов
 //TODO: Запилить кнопк обновления грида
 //TODO: Реализовать вспывающие уведомление при добавлении нового термина через вебсокет
 //TODO: Зарефакторить БЭМ -- там кое где неправильный синтаксис
-//TODO: Перенести отправку запроса и его обработку в сервисные слой из Storage
-//TODO: ПРотестировать весь функионал и наладить правильное обновление грида
 //TODO: Изменить стиль уведомлений всплывающих
-//TODO: Доразобраться с привилегиями и рендерить объекты в зависимости от назначенных привилегий
-//TODO: ПЕРЕСТАЛ РАБОТАТЬ ИЗМЕНЕНИЕ ПОРЯДКА КОЛОНОК!!! ПОФИКСИТЬ СРОЧНО!
+//TODO: СДЕЛАТЬ ДЛЯ СМЕНЫ ПАРОЛЯ ОТДЕЛЬНЫЙ ЭНДПОИНТ через объект User, но с кастомным запросом в БД
+//TODO: Доразобраться с привилегиями и рендерить объекты в зависимости от назначенных привилегий + сделать проверку привиилегий на бэк
+//TODO: Рахобраться с router
 export default {
     name: 'TermManager',
     components: {
@@ -114,9 +114,6 @@ export default {
         ...mapActions('TermManager', {
             updateSelectedTerm: 'updateSelectedTerm',
             updateSelectedColumn: 'updateSelectedColumn'
-        }),
-        ...mapActions('SuggestionManager', {
-            addSuggestion: 'addSuggestion',
         }),
         signIn(userCredentials) {
             AuthenticationService.signIn(userCredentials).then(() => this.showSignInDialog = false);
@@ -169,7 +166,7 @@ export default {
             TermGridService.updateTerm(term).then(() => this.showManageTermDialog = false);
         },
         onSuggestTerm(suggestion) {
-            this.addSuggestion(suggestion).then(() => this.showManageTermDialog = false);
+            SuggestionManagerService.addSuggestion(suggestion).then(() => this.showManageTermDialog = false);
         },
         onDeleteTerm() {
             TermGridService.deleteTerm(this.selectedTerm);

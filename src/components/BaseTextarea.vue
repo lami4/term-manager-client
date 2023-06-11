@@ -1,7 +1,7 @@
 <template>
     <ValidationProvider :rules="{required: isRequired}" v-slot="{ errors }" slim>
         <div class="base-textarea">
-            <p class="base-textarea-label">{{ label }}</p>
+            <p class="base-textarea-label">{{ label + asterisk }}</p>
                 <textarea
                     v-tooltip.right="{content: errors[0], shown: errors.length > 0, showTriggers: [], hideTriggers: ['click'], delay: {show: 0, hidden: 300}, autoHide: false}"
                     :class="['base-textarea-element', {'base-textarea-element_invalid':errors.length > 0}]"
@@ -23,6 +23,11 @@ export default {
         isRequired: {
             type: Boolean,
             required: true
+        }
+    },
+    computed: {
+        asterisk() {
+            return this.isRequired ? ' *' : '';
         }
     }
 }

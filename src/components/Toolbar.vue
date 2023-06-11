@@ -2,18 +2,21 @@
     <div class="toolbar">
       <template v-if="mode === 'term-manager'">
         <div class="toolbar-section">
-            <BaseButton class="base-button--xs"
+            <BaseButton v-if="showTermCrudButtons"
+                        class="base-button--xs"
                         @click="$emit('create-term-click')"
                         v-tooltip="'Create new term'">
                 <img src="../assets/icons/add_term.svg">
             </BaseButton>
-            <BaseButton class="base-button--xs"
+            <BaseButton v-if="showTermCrudButtons"
+                        class="base-button--xs"
                         :disabled="!selectedTerm"
                         @click="$emit('edit-term-click')"
                         v-tooltip="'Edit term'">
                 <img src="../assets/icons/edit_term.svg">
             </BaseButton>
-            <BaseButton class="base-button--xs"
+            <BaseButton v-if="showTermCrudButtons"
+                        class="base-button--xs"
                         :disabled="!selectedTerm"
                         @click="$emit('delete-term-click')"
                         v-tooltip="'Delete term'">
@@ -25,7 +28,7 @@
                 <img src="../assets/icons/report_mistake.svg">
             </BaseButton>
         </div>
-        <div class="toolbar-section">
+        <div class="toolbar-section" v-if="showColumnSection">
             <BaseButton class="base-button--xs"
                         @click="$emit('create-column-click')"
                         v-tooltip="'Create new column'">
@@ -82,6 +85,7 @@
 
 <script>
 import {mapState} from 'vuex';
+import SystemPrivileges from "../views/UserManager/domain/SystemPrivileges";
 export default {
     props: {
       mode: {
@@ -111,8 +115,15 @@ export default {
             selectedColumn: "selectedColumn"
         }),
         ...mapState('Session', {
-            isSignedIn: "isSignedIn"
-        })
+            isSignedIn: "isSignedIn",
+            userPrivileges: "userPrivileges"
+        }),
+        showColumnSection() {
+            return this.userPrivileges.includes(SystemPrivileges.TERM_GRID_MANAGER);
+        },
+        showTermCrudButtons() {
+            return this.userPrivileges.includes(SystemPrivileges.TERM_MANAGER);
+        }
     }
 }
 </script>

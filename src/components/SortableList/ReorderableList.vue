@@ -111,9 +111,7 @@ export default {
             this.emitUpdate();
         },
         emitUpdate() {
-            if (this.mapper) {
-                this.$emit('update:items', this.mapper ? this.mapper(this.localItems) : this.localItems);
-            }
+            this.$emit('update:items', this.mapper ? this.mapper(this.localItems) : this.localItems);
         }
     }
 }

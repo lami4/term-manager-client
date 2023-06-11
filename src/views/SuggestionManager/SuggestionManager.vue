@@ -42,6 +42,8 @@ import Toolbar from '../../components/Toolbar';
 import ManageTermDialog from '../TermManager/components/ManageTermDialog';
 import YesNoDialogBox from '../../components/YesNoDialog';
 import {mapActions, mapState} from 'vuex';
+import SuggestionManagerService from "../../services/SuggestionManagerService";
+import TermGridService from "../../services/TermGridService";
 export default {
     name: 'SuggestionManager',
     components: {
@@ -70,13 +72,7 @@ export default {
     },
     methods: {
         ...mapActions('SuggestionManager', {
-            updateSelectedSuggestion: 'updateSelectedSuggestion',
-            getSuggestions: 'getSuggestions',
-            acceptSuggestion: 'acceptSuggestion',
-            deleteSuggestion: 'deleteSuggestion'
-        }),
-        ...mapActions('TermManager', {
-            getColumns: 'getColumns',
+            updateSelectedSuggestion: 'updateSelectedSuggestion'
         }),
         onReviewSuggestionClick() {
             this.showManageTermDialog = true;
@@ -85,13 +81,15 @@ export default {
             this.showYesNoDialog = true;
         },
         onAcceptTerm(suggestion) {
-            this.acceptSuggestion(suggestion).then(() => this.showManageTermDialog = false);
+            SuggestionManagerService.acceptSuggestion(suggestion).then(() => this.showManageTermDialog = false);
         },
         onDeleteSuggestion() {
-            this.deleteSuggestion(this.selectedSuggestion).then(() => this.showYesNoDialog = false);
+            SuggestionManagerService.deleteSuggestion(this.selectedSuggestion).then(() => this.showYesNoDialog = false);
         }
     },
     mounted() {
+        SuggestionManagerService.getSuggestions();
+        TermGridService.getColumns();
         this.getSuggestions();
         this.getColumns();
     }

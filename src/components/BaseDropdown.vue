@@ -1,6 +1,6 @@
 <template>
     <div class="base-dropdown">
-        <p class="base-dropdown-label">{{ label }}</p>
+        <p class="base-dropdown-label">{{ label + asterisk }}</p>
         <select class="base-dropdown-element" :value="value" @input="$emit('input', $event.target.value)">
             <option v-for="option in options" :key="option.id" :value="option.id">
                 {{ option.name }}
@@ -21,6 +21,11 @@ export default {
         options: {
             type: Array,
             required: true
+        }
+    },
+    computed: {
+        asterisk() {
+            return this.isRequired ? ' *' : '';
         }
     },
     watch: {

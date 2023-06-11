@@ -1,0 +1,6 @@
+export default {
+    USER_MANAGER: 1,
+    TERM_MANAGER: 2,
+    TERM_GRID_MANAGER: 3,
+    SUGGESTION_MANAGER: 4,
+}

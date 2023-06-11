@@ -27,6 +27,7 @@
                 v-model="user.email"
                 :is-required="true"/>
             <BaseInput
+                v-if="isCreate"
                 key="parameter-4"
                 class="dialogbox_base-input"
                 label="Password"

@@ -2,9 +2,7 @@ export const namespaced = true
 
 export const state = {
     isSignedIn: false,
-    canManageUser: false,
-    canManageTerms: false,
-    canManageTermGrid: false
+    userPrivileges: []
 }
 
 export const actions = {
@@ -21,8 +19,6 @@ export const mutations = {
         state.isSignedIn = value;
     },
     SET_PRIVILEGES(state, value) {
-        state.canManageUser = value.some(privilege => privilege === 1);
-        state.canManageTerms = value.some(privilege => privilege === 2);
-        state.canManageTermGrid = value.some(privilege => privilege === 3);
+        state.userPrivileges = value;
     }
 }
