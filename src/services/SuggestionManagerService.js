@@ -3,6 +3,7 @@ import TermGridService from "./TermGridService";
 import {handleError, showNotification} from "../helpers/GenericHelper";
 import store from '../store/index';
 import NotificationType from "../components/Notificater/domain/NotificationType";
+import SystemPrivileges from "../views/UserManager/domain/SystemPrivileges";
 
 export default {
     getSuggestions() {
@@ -14,11 +15,13 @@ export default {
                 handleError('Cannot fetch suggestions from the database!', 'getSuggestions', error);
             });
     },
-    addSuggestion(payload) {
+    addSuggestion(payload, refreshSuggestions) {
         return httpClient.post('/suggestions', payload)
             .then(() => {
                 showNotification(NotificationType.SUCCESS, 'Suggestion was successfully added!');
-                this.getSuggestions();
+                if (store.state.Session.userPrivileges.includes(SystemPrivileges.SUGGESTION_MANAGER)) {
+                    this.getSuggestions();
+                }
             })
             .catch(error => {
                 handleError('Cannot add suggestion!', 'addSuggestion', error);

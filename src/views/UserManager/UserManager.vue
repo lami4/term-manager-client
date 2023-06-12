@@ -8,21 +8,21 @@
             @edit="onEditUserClick()"
             @delete="onDeleteUserClick()">
             <BaseButton
-                class="base-button--xs toolbar-section--default-button"
+                class="base-button--xs toolbar__base-button--default"
                 @click="onCreateUserClick()"
                 label="Create"/>
             <BaseButton
-                class="base-button--xs toolbar-section--default-button"
+                class="base-button--xs toolbar__base-button--default"
                 @click="onEditUserClick()"
                 label="Edit"
                 :disabled="!isAnyNodeSelected"/>
             <BaseButton
-                class="base-button--xs toolbar-section--default-button"
+                class="base-button--xs toolbar__base-button--default"
                 @click="onDeleteUserClick()"
                 label="Delete"
                 :disabled="!isAnyNodeSelected"/>
             <BaseButton
-                class="base-button--xs toolbar-section--default-button"
+                class="base-button--xs toolbar__base-button--default"
                 @click="onResetPasswordClick()"
                 label="Reset password"
                 :disabled="!isAnyNodeSelected"/>
@@ -130,7 +130,7 @@ export default {
             UserManagerService.addUser(user).then(() => this.showManageUserDialog = false);
         },
         onResetPassword(user) {
-            UserManagerService.updateUser(user).then(() => this.showResetPasswordDialog = false);
+            UserManagerService.resetPassword(user).then(() => this.showResetPasswordDialog = false);
         },
         onEditUser(user) {
             UserManagerService.updateUser(user).then(() => this.showManageUserDialog = false);

@@ -53,5 +53,14 @@ export default {
             .catch(error => {
                 handleError('Cannot fetch privileges from the database!', 'getPrivileges', error);
             });
+    },
+    resetPassword(payload) {
+        return httpClient.put('/users/' + payload.id + "/reset-password", payload)
+            .then(() => {
+                showNotification(NotificationType.SUCCESS, 'Password was successfully changed!');
+            })
+            .catch(error => {
+                handleError('Cannot update password!', 'resetPassword', error);
+            });
     }
 }

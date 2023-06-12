@@ -5,12 +5,12 @@
             :mode="'custom'"
             class="suggestion-manager__toolbar">
             <BaseButton
-                class="base-button--xs toolbar-section--default-button"
+                class="base-button--xs toolbar__base-button--default"
                 @click="onReviewSuggestionClick()"
                 label="Review"
                 :disabled="!isAnyNodeSelected"/>
             <BaseButton
-                class="base-button--xs toolbar-section--default-button"
+                class="base-button--xs toolbar__base-button--default"
                 @click="onDeleteSuggestionClick()"
                 label="Delete"
                 :disabled="!isAnyNodeSelected"/>
@@ -90,8 +90,6 @@ export default {
     mounted() {
         SuggestionManagerService.getSuggestions();
         TermGridService.getColumns();
-        this.getSuggestions();
-        this.getColumns();
     }
 }
 </script>

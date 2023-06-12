@@ -50,8 +50,8 @@ $button-bgc: #fff;
     &--xs {
         height: 35px;
     }
-    &:last-child {
-        border-right: 1px solid #e0e0e0;
+    &--no-right-border {
+        border-right: none;
     }
 }
 </style>
