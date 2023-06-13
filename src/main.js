@@ -12,7 +12,6 @@ import BaseCheckbox from "./components/BaseCheckbox";
 import {VTooltip} from "floating-vue";
 import 'floating-vue/dist/style.css';
 
-// Add a rule.
 extend('required', {
   ...required,
   message: 'This field is required'
@@ -29,7 +28,6 @@ extend('isColumnNameUnique', {
   message: 'This name is not unique'
 });
 
-// Register it globally
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('BaseButton', BaseButton);

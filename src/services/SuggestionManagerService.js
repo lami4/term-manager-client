@@ -16,6 +16,7 @@ export default {
             });
     },
     addSuggestion(payload, refreshSuggestions) {
+        store.state.notification.ignoreNextWsMessage = true;
         return httpClient.post('/suggestions', payload)
             .then(() => {
                 showNotification(NotificationType.SUCCESS, 'Suggestion was successfully added!');

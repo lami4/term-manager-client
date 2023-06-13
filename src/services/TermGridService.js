@@ -14,6 +14,7 @@ export default {
             });
     },
     addTerm(payload) {
+        store.state.notification.ignoreNextWsMessage = true;
         return httpClient.post('/terms', payload)
             .then(() => {
                 showNotification(NotificationType.SUCCESS, 'Term was successfully added!');
