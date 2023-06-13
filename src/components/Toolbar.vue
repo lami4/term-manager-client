@@ -1,7 +1,7 @@
 <template>
     <div class="toolbar">
       <template v-if="mode === 'term-manager'">
-        <div class="toolbar-section">
+        <div class="toolbar__section">
             <BaseButton v-if="showTermCrudButtons"
                         class="base-button--xs base-button--no-right-border toolbar__base-button--icon"
                         @click="$emit('create-term-click')"
@@ -87,7 +87,7 @@
 
 <script>
 import {mapState} from 'vuex';
-import SystemPrivileges from "../views/UserManager/domain/SystemPrivileges";
+import SystemPrivileges from '../views/UserManager/domain/SystemPrivileges';
 export default {
     props: {
       mode: {
@@ -113,12 +113,12 @@ export default {
     },
     computed: {
         ...mapState('TermManager', {
-            selectedTerm: "selectedTerm",
-            selectedColumn: "selectedColumn"
+            selectedTerm: 'selectedTerm',
+            selectedColumn: 'selectedColumn'
         }),
         ...mapState('Session', {
-            isSignedIn: "isSignedIn",
-            userPrivileges: "userPrivileges"
+            isSignedIn: 'isSignedIn',
+            userPrivileges: 'userPrivileges'
         }),
         showColumnSection() {
             return this.userPrivileges.includes(SystemPrivileges.TERM_GRID_MANAGER);
@@ -136,7 +136,7 @@ $generic-border-radius: 3px;
 .toolbar {
     display: flex;
 
-    &-section {
+    &__section {
         display: flex;
         margin-right: 15px;
     }

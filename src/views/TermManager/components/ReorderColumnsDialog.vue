@@ -55,14 +55,6 @@ export default {
                 return new ReorderableItem(option);
             });
         }
-        // columns: {
-        //     immediate: true,
-        //     handler() {
-        //         this.sortableListElements = this.columns.map(option => {
-        //             return new ReorderableItem(option);
-        //         });
-        //     }
-        // }
     }
 }
 </script>

@@ -10,7 +10,7 @@
         <template v-slot:body>
             <BaseInput
                 key="parameter-1"
-                class="dialogbox_base-input"
+                class="dialogbox__base-input"
                 label="New password"
                 type="password"
                 v-model="user.password"

@@ -10,40 +10,40 @@
         <template v-slot:body>
             <BaseInput
                 key="parameter-1"
-                class="dialogbox_base-input"
+                class="dialogbox__base-input"
                 label="First name"
                 v-model="user.firstName"
                 :is-required="true"/>
             <BaseInput
                 key="parameter-2"
-                class="dialogbox_base-input"
+                class="dialogbox__base-input"
                 label="Last name"
                 v-model="user.lastName"
                 :is-required="true"/>
             <BaseInput
                 key="parameter-3"
-                class="dialogbox_base-input"
+                class="dialogbox__base-input"
                 label="Email"
                 v-model="user.email"
                 :is-required="true"/>
             <BaseInput
                 v-if="isCreate"
                 key="parameter-4"
-                class="dialogbox_base-input"
+                class="dialogbox__base-input"
                 label="Password"
                 type="password"
                 v-model="user.password"
                 :is-required="true"/>
             <BaseDropdown
                 key="parameter-5"
-                class="dialogbox_base-dropdown"
+                class="dialogbox__base-dropdown"
                 label="Status"
                 :options="[{id:'ACTIVE', name:'Active'}, {id:'BLOCKED', name:'Blocked'}]"
                 v-model="user.status"
                 :is-required="true"/>
             <BaseCheckbox
                 v-for="privilege in privileges"
-                class="dialogbox_base-dropdown"
+                class="dialogbox__base-dropdown"
                 :key="'privilege-' + privilege.id"
                 :label="privilege.name"
                 v-model="privilegeSelection[privilege.id]"/>

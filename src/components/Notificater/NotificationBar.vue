@@ -1,51 +1,41 @@
 <template>
-  <div class="announcement" :class="notification.type" ref="self">
-      <p>{{ notification.message }}</p>
-  </div>
+    <div class="notification-container__item" :class="className" ref="self">
+        <p>{{ notification.message }}</p>
+    </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import NotificationType from "./domain/NotificationType";
 export default {
-  name: "NotificationBar",
-  props: {
-    notification: {
-        type: Object,
-        required: true
+    name: 'NotificationBar',
+    props: {
+        notification: {
+            type: Object,
+            required: true
+        }
+    },
+    computed: {
+        className() {
+            let className = 'notification-container__item--';
+            if (this.notification.type === NotificationType.SUCCESS) {
+                return className.concat(NotificationType.SUCCESS);
+            } else {
+                return className.concat(NotificationType.ERROR);
+            }
+        }
+    },
+    methods: {
+        ...mapActions('notification', ['delete'])
+    },
+    mounted() {
+        setTimeout(() => {
+            this.delete(this.notification);
+        }, 4900);
+        this.$refs.self.animate({opacity: '0'}, 5000);
     }
-  },
-  data() {
-    return {
-    }
-  },
-  methods: {
-    ...mapActions('notification', ['delete'])
-  },
-  mounted() {
-    setTimeout(() => {
-        this.delete(this.notification);
-    }, 4900);
-    this.$refs.self.animate({opacity: '0'}, 5000);
-  }
 }
 </script>
 
 <style>
-.announcement {
-    text-align: center;
-    width: 250px;
-    background-color: #ffffff;
-    padding: 10px 10px;
-    margin: 5px 0;
-    border-radius: 10px;
-    color: black;
-}
-
-.announcement-wrp .error {
-  background-color: #ff6961;
-}
-
-.announcement-wrp .success {
-  background-color: white;
-}
 </style>

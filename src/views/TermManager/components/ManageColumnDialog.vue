@@ -9,29 +9,29 @@
         <template v-slot:body>
             <BaseInput
                 key="parameter-1"
-                class="dialogbox_base-input"
+                class="dialogbox__base-input"
                 label="Column name"
                 v-model="column.name"
                 :is-required="true"
                 :validation-rules="uniqueNameRule"/>
             <BaseCheckbox
-                class="dialogbox_base-dropdown"
+                class="dialogbox__base-dropdown"
                 key="parameter-2"
                 label="Is mandatory"
                 v-model="column.mandatory"/>
             <BaseCheckbox
-                class="dialogbox_base-dropdown"
+                class="dialogbox__base-dropdown"
                 key="parameter-3"
                 label="Is filterable"
                 v-model="column.filterable"/>
             <BaseCheckbox
-                class="dialogbox_base-dropdown"
+                class="dialogbox__base-dropdown"
                 key="parameter-4"
                 label="Is sortable"
                 v-model="column.sortable"/>
             <BaseDropdown
                 key="parameter-5"
-                class="dialogbox_base-dropdown"
+                class="dialogbox__base-dropdown"
                 label="Type"
                 :options="elementTypes"
                 v-model="column.elementType"

@@ -10,28 +10,28 @@
             <template v-for="column in columns">
                     <BaseInput
                         :key="column.htmlId"
-                        class="dialogbox_base-input"
+                        class="dialogbox__base-input"
                         v-if="column.elementType === 'TEXTINPUT'"
                         :label="column.name"
                         v-model="term.properties[column.htmlId]"
                         :is-required="column.mandatory"/>
                     <BaseDropdown
                         :key="column.htmlId"
-                        class="dialogbox_base-dropdown"
+                        class="dialogbox__base-dropdown"
                         v-if="column.elementType === 'SELECT'"
                         :label="column.name"
                         :options="column.dropdownOptions"
                         v-model="term.properties[column.htmlId]"/>
                     <BaseTextarea
                         :key="column.htmlId"
-                        class="dialogbox_base-textarea"
+                        class="dialogbox__base-textarea"
                         v-if="column.elementType === 'TEXTAREA'"
                         :label="column.name"
                         v-model="term.properties[column.htmlId]"
                         :is-required="column.mandatory"/>
                     <BaseCheckbox
                         :key="column.htmlId"
-                        class="dialogbox_base-checkbox"
+                        class="dialogbox__base-checkbox"
                         v-if="column.elementType === 'CHECKBOX'"
                         :label="column.name"
                         v-model="term.properties[column.htmlId]"/>

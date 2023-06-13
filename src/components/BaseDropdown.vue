@@ -1,7 +1,7 @@
 <template>
     <div class="base-dropdown">
-        <p class="base-dropdown-label">{{ label + asterisk }}</p>
-        <select class="base-dropdown-element" :value="value" @input="$emit('input', $event.target.value)">
+        <p class="base-dropdown__label">{{ label + asterisk }}</p>
+        <select class="base-dropdown__element" :value="value" @input="$emit('input', $event.target.value)">
             <option v-for="option in options" :key="option.id" :value="option.id">
                 {{ option.name }}
             </option>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-    name: "BaseDropdown",
+    name: 'BaseDropdown',
     props: {
         value: [String, Number],
         label: {
@@ -41,21 +41,23 @@ export default {
 }
 </script>
 
-<style>
-.base-dropdown-element {
-    height: 25px;
-    width: 100%;
-    border: 1px solid #e0e0e0;
-    font-size: 12px;
-    font-family: Verdana, sans-serif;
-    box-sizing: border-box;
-    outline: none;
-}
-.base-dropdown-label {
-    font-size: 14px;
-    font-weight: bold;
-    color: #000;
-    margin: 0 0 4px 0;
-    padding: 0;
+<style lang="scss">
+.base-dropdown {
+    &__element {
+        height: 25px;
+        width: 100%;
+        border: 1px solid #e0e0e0;
+        font-size: 12px;
+        font-family: Verdana, sans-serif;
+        box-sizing: border-box;
+        outline: none;
+    }
+    &__label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #000;
+        margin: 0 0 4px 0;
+        padding: 0;
+    }
 }
 </style>

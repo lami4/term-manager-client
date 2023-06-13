@@ -9,7 +9,7 @@
             <p class="yes-no-dialog-message">{{ message }}</p>
         </template>
         <template v-slot:footer>
-            <BaseButton class="base-button--s dialogbox_base-button" label="Yes" @click="onSubmit()"></BaseButton>
+            <BaseButton class="base-button--s" label="Yes" @click="onSubmit()"></BaseButton>
             <BaseButton class="base-button--s" label="No" @click="onClose()"></BaseButton>
         </template>
     </BaseDialog>
@@ -18,7 +18,7 @@
 <script>
 import BaseDialog from './BaseDialog';
 export default {
-    name: "YesNoDialog",
+    name: 'YesNoDialog',
     components: {
         BaseDialog
     },

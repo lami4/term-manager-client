@@ -1,18 +1,18 @@
 <template>
     <div class="dialogbox" :class="{'dialogbox_displayed': show}">
-        <div class="dialogbox-container" :style="'width:' + width + 'px'">
-            <div class="dialogbox-header">
-                <span class="dialogbox-title">{{ title }}</span>
-                <span class="dialogbox-close-button" @click="onClose()">&times;</span>
+        <div class="dialogbox__container" :style="'width:' + width + 'px'">
+            <div class="dialogbox__header">
+                <span class="dialogbox__title">{{ title }}</span>
+                <span class="dialogbox__close-button" @click="onClose()">&times;</span>
             </div>
             <ValidationObserver ref="observer" slim>
-                <div class="dialogbox-body">
+                <div class="dialogbox__body">
                     <slot name="body"></slot>
                 </div>
             </ValidationObserver>
-            <div class="dialogbox-footer">
+            <div class="dialogbox__footer">
                 <slot name="footer">
-                    <BaseButton class="base-button--s dialogbox_base-button" @click="$emit('submit')" :label="submitButtonLabel"/>
+                    <BaseButton class="base-button--s" @click="$emit('submit')" :label="submitButtonLabel"/>
                     <BaseButton class="base-button--s" @click="onClose()" label="Cancel"/>
                 </slot>
             </div>
@@ -22,7 +22,7 @@
 
 <script>
 export default {
-    name: "BaseDialog",
+    name: 'BaseDialog',
     props: {
         show: {
             type: Boolean,
@@ -80,12 +80,12 @@ $black-color: #000;
     &_displayed {
         display: flex;
     }
-    &-container {
+    &__container {
         background-color: $dialogbox-container-bgc;
         margin: auto auto;
         max-height: 800px;
     }
-    &-header {
+    &__header {
         background-color: $dialogbox-header-bgc;
         color: $white-color;
         font-size: 16px;
@@ -95,27 +95,24 @@ $black-color: #000;
         display: flex;
         justify-content: space-between;
     }
-    &-body {
-        padding: 15px 15px 0 15px;
-    }
-    &-footer {
-        padding: 15px;
-        display: flex;
-        justify-content: flex-end;
-    }
-    &-close-button:hover {
+    &__close-button:hover {
         color: $black-color;
         text-decoration: none;
         cursor: pointer;
     }
-    &_base-dropdown:not(:last-child),
-    &_base-input:not(:last-child),
-    &_base-textarea:not(:last-child),
-    &_base-checkbox:not(:last-child) {
-        margin-bottom: 15px;
+    &__body {
+        padding: 15px 15px 0 15px;
     }
-    &_base-button {
-        margin-right: 10px;
+    &__footer {
+        padding: 15px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    &__base-dropdown:not(:last-child),
+    &__base-input:not(:last-child),
+    &__base-textarea:not(:last-child),
+    &__base-checkbox:not(:last-child) {
+        margin-bottom: 15px;
     }
 }
 </style>

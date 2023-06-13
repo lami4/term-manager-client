@@ -9,12 +9,12 @@
         ref="baseDialog">
         <template v-slot:body>
             <BaseInput
-                class="dialogbox_base-input"
+                class="dialogbox__base-input"
                 label="E-mail"
                 v-model="userCredentials.email"
                 :is-required="true"/>
             <BaseInput
-                class="dialogbox_base-input"
+                class="dialogbox__base-input"
                 label="Password"
                 v-model="userCredentials.password"
                 type="password"
