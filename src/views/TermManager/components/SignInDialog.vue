@@ -4,7 +4,7 @@
         title="Sign in"
         @close="$emit('close')"
         @submit="onSubmit()"
-        submit-button-title="Sign in"
+        submit-button-label="Sign in"
         :width="400"
         ref="baseDialog">
         <template v-slot:body>

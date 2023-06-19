@@ -23,8 +23,7 @@ export default {
 <style lang="scss">
 .notification-container {
     position: fixed;
-    font-weight: bold;
-    color: #555555;
+    color: #343a40;
     top: 0;
     right: 6px;
     z-index: 1000;
@@ -32,16 +31,14 @@ export default {
     &__item {
         text-align: center;
         width: 250px;
-        background-color: #ffffff;
-        padding: 10px 10px;
+        padding: 5px 5px;
         margin: 5px 0;
-        border-radius: 10px;
-        color: black;
+        border-radius: 3px;
         &--error {
-            background-color: #ff6961;
+            background-color: #ff9d9d;
         }
         &--success {
-            background-color: #fff;
+            background-color: #c0e5c0;
         }
     }
 }

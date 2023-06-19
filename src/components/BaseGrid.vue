@@ -1,7 +1,7 @@
 <template>
     <div class="grid-wrapper">
         <table class="base-grid">
-            <thead :class="{'selectable': isColumnSelectEnabled}">
+            <thead :class="['base-grid__header', {'selectable': isColumnSelectEnabled}]">
             <tr>
                 <th v-for="column in columns"
                     :key="column.id"
@@ -13,7 +13,7 @@
                 </th>
             </tr>
             </thead>
-            <tbody>
+            <tbody class="base-grid__body">
             <tr v-for="entry in entries"
                 :key="entry.id"
                 :data-entry-id="entry.id"
@@ -31,7 +31,6 @@
 
 
 <script>
-//REFACTOR: CONTROLLER FOR LESS
 export default {
     name: "BaseGrid",
     props: {
@@ -84,23 +83,23 @@ export default {
             if (this.isRowSelectEnabled) {
                 const tr = event.target.parentNode;
                 if (this.selectedTh) {
-                    this.selectedTh.classList.remove("selected");
+                    this.selectedTh.classList.remove("selected-column");
                     this.selectedTh = null;
                 }
                 if (this.selectedTr === tr) {
                     if (!this.isRowUnselectEnabled) return;
-                    this.selectedTr.classList.remove("selected");
+                    this.selectedTr.classList.remove("selected-row");
                     this.selectedTr = null;
                     this.$emit('unselect-entry', null);
                     return;
                 }
                 if (this.selectedTr && this.selectedTr !== tr) {
-                    this.selectedTr.classList.remove("selected");
+                    this.selectedTr.classList.remove("selected-row");
                     this.selectedTr = tr;
-                    this.selectedTr.classList.toggle("selected");
+                    this.selectedTr.classList.toggle("selected-row");
                 } else {
                     this.selectedTr = tr;
-                    this.selectedTr.classList.toggle("selected");
+                    this.selectedTr.classList.toggle("selected-row");
                 }
                 this.$emit('select-entry', term);
                 if (this.isColumnSelectEnabled) {
@@ -112,23 +111,23 @@ export default {
             if (this.isColumnSelectEnabled) {
                 const th = event.target
                 if (this.selectedTr) {
-                    this.selectedTr.classList.remove("selected");
+                    this.selectedTr.classList.remove("selected-row");
                     this.selectedTr = null;
                 }
                 if (this.selectedTh === th) {
                     if (!this.isColumnUnselectEnabled) return;
-                    this.selectedTh.classList.remove("selected");
+                    this.selectedTh.classList.remove("selected-column");
                     this.selectedTh = null;
                     this.$emit('select-column', null);
                     return;
                 }
                 if (this.selectedTh && this.selectedTh !== th) {
-                    this.selectedTh.classList.remove("selected");
+                    this.selectedTh.classList.remove("selected-column");
                     this.selectedTh = th;
-                    this.selectedTh.classList.toggle("selected");
+                    this.selectedTh.classList.toggle("selected-column");
                 } else {
                     this.selectedTh = th;
-                    this.selectedTh.classList.toggle("selected");
+                    this.selectedTh.classList.toggle("selected-column");
                 }
                 this.$emit('unselect-entry', null);
                 this.$emit('select-column', column);
@@ -163,19 +162,19 @@ $base-selection-bgc: #e0e0e0;
     color: $grid-base-font-color;
     background-color: $grid-base-bgc;
 
-    & th,
-    & td {
+    &__header th,
+    &__body td {
         text-align: left;
         padding: 10px 0 10px 15px;
     }
 
-    & thead {
+    &__header {
         font-size: 16px;
         background-color: $header-bgc;
         color: $header-font-color;
         & th {
             border: solid $header-bgc 3px;
-            &.selected {
+            &.selected-column {
                 border: solid $page-bgc 3px;
                 background-color: $base-selection-bgc;
                 cursor: pointer;
@@ -187,13 +186,13 @@ $base-selection-bgc: #e0e0e0;
         }
     }
 
-    & tbody {
+    &__body {
         & td {
             border-bottom: solid $base-selection-bgc 1px;
         }
 
         & tr {
-            &.selected {
+            &.selected-row {
                 background-color: $base-selection-bgc;
             }
         }

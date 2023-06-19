@@ -28,7 +28,7 @@
                 <img src="../assets/icons/report_mistake.svg">
             </BaseButton>
         </div>
-        <div class="toolbar-section" v-if="showColumnSection">
+        <div class="toolbar__section" v-if="showColumnSection">
             <BaseButton class="base-button--xs base-button--no-right-border toolbar__base-button--icon"
                         @click="$emit('create-column-click')"
                         v-tooltip="'Create new column'">
@@ -52,7 +52,7 @@
                 <img style="transform: rotate(90deg);" src="../assets/icons/reorder_columns.svg">
             </BaseButton>
         </div>
-        <div class="toolbar-section">
+        <div class="toolbar__section">
             <BaseButton class="base-button--xs toolbar__base-button--default"
                         @click="$emit(isSignedIn ? 'sign-out-click' : 'sign-in-click')"
                         :label="isSignedIn ? 'Sign out' : 'Sign in'"/>

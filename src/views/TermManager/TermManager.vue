@@ -21,8 +21,8 @@
             @unselect-entry="updateSelectedTerm($event)"
             @select-column="updateSelectedColumn($event)"
             @unselect-column="updateSelectedColumn($event)"
-            :is-column-select-enabled="true"
-            :is-column-unselect-enabled="true"/>
+            :is-column-select-enabled="isColumnsSelectable"
+            :is-column-unselect-enabled="isColumnsSelectable"/>
         <ManageTermDialog
             :show="showManageTermDialog"
             :is-create="isCreate"
@@ -57,23 +57,21 @@
 </template>
 
 <script>
-import Toolbar from "../../components/Toolbar.vue";
-import BaseGrid from "../../components/BaseGrid.vue";
-import ManageColumnDialog from "./components/ManageColumnDialog.vue";
-import ManageTermDialog from "./components/ManageTermDialog.vue";
-import SignInDialog from "./components/SignInDialog.vue";
-import YesNoDialogBox from "../../components/YesNoDialog.vue";
-import AuthenticationService from "../../services/AuthenticationService";
-import ReorderColumnsDialog from "./components/ReorderColumnsDialog";
-import TermGridService from "../../services/TermGridService";
-import SuggestionManagerService from "../../services/SuggestionManagerService";
+import Toolbar from '../../components/Toolbar.vue';
+import BaseGrid from '../../components/BaseGrid.vue';
+import ManageColumnDialog from './components/ManageColumnDialog.vue';
+import ManageTermDialog from './components/ManageTermDialog.vue';
+import SignInDialog from './components/SignInDialog.vue';
+import YesNoDialogBox from '../../components/YesNoDialog.vue';
+import AuthenticationService from '../../services/AuthenticationService';
+import ReorderColumnsDialog from './components/ReorderColumnsDialog';
+import TermGridService from '../../services/TermGridService';
+import SuggestionManagerService from '../../services/SuggestionManagerService';
 import {mapActions, mapState} from 'vuex';
+import SystemPrivileges from "../UserManager/domain/SystemPrivileges";
 
-//TODO: Изменить стиль тултипов
 //TODO: Запилить кнопк обновления грида
-//TODO: Зарефакторить БЭМ -- там кое где неправильный синтаксис *
-//TODO: Изменить стиль уведомлений всплывающих
-//TODO: Рахобраться с router
+//TODO: Разобраться с router
 export default {
     name: 'TermManager',
     components: {
@@ -101,11 +99,17 @@ export default {
     },
     computed: {
         ...mapState('TermManager', {
-            selectedTerm: "selectedTerm",
-            selectedColumn: "selectedColumn",
-            columns: "columns",
-            terms: "terms"
-        })
+            selectedTerm: 'selectedTerm',
+            selectedColumn: 'selectedColumn',
+            columns: 'columns',
+            terms: 'terms'
+        }),
+        ...mapState('Session', {
+            userPrivileges: 'userPrivileges'
+        }),
+        isColumnsSelectable() {
+            return this.userPrivileges.includes(SystemPrivileges.TERM_GRID_MANAGER);
+        }
     },
     methods: {
         ...mapActions('TermManager', {

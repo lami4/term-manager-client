@@ -10,39 +10,39 @@ export default {
                 store.dispatch('UserManager/updateUsers', response.data);
             })
             .catch(error => {
-                handleError('Cannot fetch users from the database!', 'getUsers', error);
+                handleError('Cannot fetch users from the database', 'getUsers', error);
             });
     },
     addUser(payload) {
         return httpClient.post('/users', payload)
             .then(() => {
-                showNotification(NotificationType.SUCCESS, 'User was successfully added!');
+                showNotification(NotificationType.SUCCESS, 'User was successfully added');
                 this.getUsers();
             })
             .catch(error => {
-                handleError('Cannot add user!', 'addUser', error);
+                handleError('Cannot add user', 'addUser', error);
             });
     },
     updateUser(payload) {
         return httpClient.put('/users/' + payload.id, payload)
             .then(() => {
-                showNotification(NotificationType.SUCCESS, 'User was successfully updated!');
+                showNotification(NotificationType.SUCCESS, 'User was successfully updated');
                 store.dispatch('UserManager/updateSelectedUser', payload);
                 this.getUsers();
             })
             .catch(error => {
-                handleError('Cannot update user!', 'updateUser', error);
+                handleError('Cannot update user', 'updateUser', error);
             });
     },
     deleteUser(payload) {
         return httpClient.delete('/users/' + payload.id)
             .then(() => {
-                showNotification(NotificationType.SUCCESS, 'User was successfully deleted!');
+                showNotification(NotificationType.SUCCESS, 'User was successfully deleted');
                 store.dispatch('UserManager/updateSelectedUser', null);
                 this.getUsers();
             })
             .catch(error => {
-                handleError('Cannot delete user!', 'deleteUser', error);
+                handleError('Cannot delete user', 'deleteUser', error);
             });
     },
     getPrivileges() {
@@ -51,16 +51,16 @@ export default {
                 store.dispatch('UserManager/updatePrivileges', response.data);
             })
             .catch(error => {
-                handleError('Cannot fetch privileges from the database!', 'getPrivileges', error);
+                handleError('Cannot fetch privileges from the database', 'getPrivileges', error);
             });
     },
     resetPassword(payload) {
         return httpClient.put('/users/' + payload.id + "/reset-password", payload)
             .then(() => {
-                showNotification(NotificationType.SUCCESS, 'Password was successfully changed!');
+                showNotification(NotificationType.SUCCESS, 'Password was successfully changed');
             })
             .catch(error => {
-                handleError('Cannot update password!', 'resetPassword', error);
+                handleError('Cannot update password', 'resetPassword', error);
             });
     }
 }

@@ -10,7 +10,7 @@ import BaseInput from "./components/BaseInput";
 import BaseTextarea from "./components/BaseTextarea";
 import BaseCheckbox from "./components/BaseCheckbox";
 import {VTooltip} from "floating-vue";
-import 'floating-vue/dist/style.css';
+import './css/tooltips.css'
 
 extend('required', {
   ...required,

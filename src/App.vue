@@ -7,6 +7,7 @@
           class="tab-button">
           {{ tab.name }}
       </button>
+      <NavigationBar/>
       <keep-alive>
         <component :is="currentTab"></component>
       </keep-alive>
@@ -21,12 +22,14 @@ import SuggestionManager from './views/SuggestionManager/SuggestionManager';
 import NotificationContainer from './components/Notificater/NotificationContainer';
 import SystemPrivileges from "./views/UserManager/domain/SystemPrivileges";
 import {mapState} from "vuex";
+import NavigationBar from "./components/NavigationBar";
 export default {
     components: {
         TermManager,
         UserManager,
         SuggestionManager,
-        NotificationContainer
+        NotificationContainer,
+        NavigationBar
     },
     data() {
         return {

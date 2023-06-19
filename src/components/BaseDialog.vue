@@ -12,7 +12,7 @@
             </ValidationObserver>
             <div class="dialogbox__footer">
                 <slot name="footer">
-                    <BaseButton class="base-button--s" @click="$emit('submit')" :label="submitButtonLabel"/>
+                    <BaseButton class="base-button--s dialogbox__base-button--right-margin" @click="$emit('submit')" :label="submitButtonLabel"/>
                     <BaseButton class="base-button--s" @click="onClose()" label="Cancel"/>
                 </slot>
             </div>
@@ -113,6 +113,9 @@ $black-color: #000;
     &__base-textarea:not(:last-child),
     &__base-checkbox:not(:last-child) {
         margin-bottom: 15px;
+    }
+    &__base-button--right-margin {
+        margin-right: 10px;
     }
 }
 </style>
