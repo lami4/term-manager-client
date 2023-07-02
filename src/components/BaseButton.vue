@@ -45,13 +45,20 @@ $button-bgc: #fff;
         opacity: 0.2;
     }
     &--s {
-        height: 28px;
+        height: 30px;
     }
     &--xs {
-        height: 35px;
+        height: 30px;
     }
     &--no-right-border {
         border-right: none;
+    }
+    &--bgc-dark-blue {
+        background-color: #6f8faf;
+        &:hover {
+            background-color: #6f8faf;
+            text-decoration: underline;
+        }
     }
 }
 </style>

@@ -1,15 +1,8 @@
 <template>
   <div id="app">
-      <button
-          v-for="tab in availableTabs"
-          :key="tab.name"
-          @click="currentTab = tab.component"
-          class="tab-button">
-          {{ tab.name }}
-      </button>
       <NavigationBar/>
       <keep-alive>
-        <component :is="currentTab"></component>
+          <router-view/>
       </keep-alive>
       <NotificationContainer/>
   </div>
@@ -20,8 +13,6 @@ import TermManager from './views/TermManager/TermManager';
 import UserManager from './views/UserManager/UserManager';
 import SuggestionManager from './views/SuggestionManager/SuggestionManager';
 import NotificationContainer from './components/Notificater/NotificationContainer';
-import SystemPrivileges from "./views/UserManager/domain/SystemPrivileges";
-import {mapState} from "vuex";
 import NavigationBar from "./components/NavigationBar";
 export default {
     components: {
@@ -30,36 +21,6 @@ export default {
         SuggestionManager,
         NotificationContainer,
         NavigationBar
-    },
-    data() {
-        return {
-            currentTab: TermManager,
-            tabs: [
-                {
-                    name: "UserManager",
-                    component: UserManager,
-                    requiredPrivilege: SystemPrivileges.USER_MANAGER
-                },
-                {
-                    name: "TermManager",
-                    component: TermManager,
-                    requiredPrivilege: null
-                },
-                {
-                    name: "SuggestionManager",
-                    component: SuggestionManager,
-                    requiredPrivilege: SystemPrivileges.SUGGESTION_MANAGER
-                },
-            ],
-        }
-    },
-    computed: {
-        ...mapState('Session', {
-            userPrivileges: "userPrivileges"
-        }),
-        availableTabs() {
-            return this.tabs.filter(tab => tab.requiredPrivilege === null || this.userPrivileges.includes(tab.requiredPrivilege));
-        }
     }
 }
 </script>
@@ -71,6 +32,7 @@ body {
   font-family: Verdana, sans-serif;
   color: #747474;
   font-size: 13px;
+  margin: 0;
 }
 
 .router-link {

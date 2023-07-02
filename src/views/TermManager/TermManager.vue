@@ -1,11 +1,8 @@
 <template>
-    <div id="term-manager-wrp">
-        <h1>Term Manager</h1>
+    <div class="term-manager-wrp">
         <Toolbar
             class="term-manager__toolbar"
             mode="term-manager"
-            @sign-in-click="showSignInDialog = true"
-            @sign-out-click="signOut()"
             @create-term-click="onCreateTermClick()"
             @edit-term-click="onEditTermClick()"
             @delete-term-click="onDeleteTermClick()"
@@ -49,10 +46,6 @@
             :event-name="yesNoDialogEvent"
             @delete-term="onDeleteTerm()"
             @delete-column="onDeleteColumn()"/>
-        <SignInDialog
-            :show="showSignInDialog"
-            @submit="signIn($event)"
-            @close="showSignInDialog = false"/>
         </div>
 </template>
 
@@ -61,7 +54,6 @@ import Toolbar from '../../components/Toolbar.vue';
 import BaseGrid from '../../components/BaseGrid.vue';
 import ManageColumnDialog from './components/ManageColumnDialog.vue';
 import ManageTermDialog from './components/ManageTermDialog.vue';
-import SignInDialog from './components/SignInDialog.vue';
 import YesNoDialogBox from '../../components/YesNoDialog.vue';
 import AuthenticationService from '../../services/AuthenticationService';
 import ReorderColumnsDialog from './components/ReorderColumnsDialog';
@@ -70,8 +62,6 @@ import SuggestionManagerService from '../../services/SuggestionManagerService';
 import {mapActions, mapState} from 'vuex';
 import SystemPrivileges from "../UserManager/domain/SystemPrivileges";
 
-//TODO: Запилить кнопк обновления грида
-//TODO: Разобраться с router
 export default {
     name: 'TermManager',
     components: {
@@ -80,13 +70,11 @@ export default {
         ManageColumnDialog,
         ManageTermDialog,
         ReorderColumnsDialog,
-        SignInDialog,
         YesNoDialogBox
     },
     data() {
         return {
             showYesNoDialog: false,
-            showSignInDialog: false,
             showManageTermDialog: false,
             manageTermDialogMode: 'default',
             showManageColumnDialog: false,
@@ -116,12 +104,6 @@ export default {
             updateSelectedTerm: 'updateSelectedTerm',
             updateSelectedColumn: 'updateSelectedColumn'
         }),
-        signIn(userCredentials) {
-            AuthenticationService.signIn(userCredentials).then(() => this.showSignInDialog = false);
-        },
-        signOut() {
-            AuthenticationService.signOut();
-        },
         onCreateTermClick() {
             this.manageTermDialogMode = 'default';
             this.isCreate = true;
@@ -196,7 +178,10 @@ export default {
 </script>
 
 <style>
+.term-manager-wrp {
+    padding: 0 10px;
+}
 .term-manager__toolbar {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 </style>

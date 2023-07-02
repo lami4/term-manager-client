@@ -1,6 +1,5 @@
 <template>
-    <div id="suggestion-manager-wrp">
-        <h1>Suggestion manager</h1>
+    <div class="suggestion-manager-wrp">
         <Toolbar
             :mode="'custom'"
             class="suggestion-manager__toolbar">
@@ -95,7 +94,10 @@ export default {
 </script>
 
 <style>
+.suggestion-manager-wrp {
+    padding: 0 10px;
+}
 .suggestion-manager__toolbar {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 </style>

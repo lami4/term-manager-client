@@ -1,14 +1,26 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import TermManager from '../views/TermManager/TermManager'
+import UserManager from "../views/UserManager/UserManager";
+import SuggestionManager from "../views/SuggestionManager/SuggestionManager";
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/term-manager',
+    path: '/terms',
     name: 'TermManager',
     component: TermManager
+  },
+  {
+    path: '/users',
+    name: 'UserManager',
+    component: UserManager
+  },
+  {
+    path: '/suggestions',
+    name: 'SuggestionManager',
+    component: SuggestionManager
   }
 ]
 

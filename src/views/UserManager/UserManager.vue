@@ -1,6 +1,5 @@
 <template>
-    <div id="user-manager-wrp">
-        <h1>User manager</h1>
+    <div class="user-manager-wrp">
         <Toolbar
             class="user-manager__toolbar"
             :mode="'custom'"
@@ -150,7 +149,10 @@ export default {
 </script>
 
 <style>
+.user-manager-wrp {
+    padding: 0 10px;
+}
 .user-manager__toolbar {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 </style>

@@ -52,11 +52,6 @@
                 <img style="transform: rotate(90deg);" src="../assets/icons/reorder_columns.svg">
             </BaseButton>
         </div>
-        <div class="toolbar__section">
-            <BaseButton class="base-button--xs toolbar__base-button--default"
-                        @click="$emit(isSignedIn ? 'sign-out-click' : 'sign-in-click')"
-                        :label="isSignedIn ? 'Sign out' : 'Sign in'"/>
-        </div>
       </template>
       <template v-if="mode === 'default-crud'">
         <div class="toolbar-section">
