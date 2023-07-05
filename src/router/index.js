@@ -8,6 +8,10 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: "/",
+    redirect: { path: "/terms" },
+  },
+  {
     path: '/terms',
     name: 'TermManager',
     component: TermManager
