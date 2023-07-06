@@ -3,7 +3,7 @@ import Stomp from 'stompjs';
 var stompClient = null;
 
 export function connect(subscriberCallback) {
-    const socket = new SockJS('http://localhost:4567/tb-websocket');
+    const socket = new SockJS('http://terminologist.ru:4567/tb-websocket');
     stompClient = Stomp.over(socket);
     stompClient.debug = null;
     stompClient.connect({}, frame => {

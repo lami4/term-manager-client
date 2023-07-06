@@ -166,6 +166,7 @@ $base-selection-bgc: #e0e0e0;
     &__body td {
         text-align: left;
         padding: 10px 0 10px 15px;
+        min-width: 250px;
     }
 
     &__header {
