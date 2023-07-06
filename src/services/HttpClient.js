@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from '../store/index';
 
 const config = {
-    baseURL: 'http://95.163.229.218:4567'
+  baseURL: 'http://terminologist.ru:4567'
 }
 
 const httpClient = axios.create(config);
