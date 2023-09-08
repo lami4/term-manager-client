@@ -1,9 +1,10 @@
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import settings from '../settings';
 var stompClient = null;
 
 export function connect(subscriberCallback) {
-    const socket = new SockJS('http://terminologist.ru:4567/tb-websocket');
+    const socket = new SockJS(`${settings.hostname}/tb-websocket`);
     stompClient = Stomp.over(socket);
     stompClient.debug = null;
     stompClient.connect({}, frame => {

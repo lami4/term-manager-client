@@ -66,7 +66,9 @@ export default {
             }
         },
         signIn(userCredentials) {
-            AuthenticationService.signIn(userCredentials).then(() => this.showSignInDialog = false);
+            AuthenticationService.signIn(userCredentials)
+            .then(() => this.showSignInDialog = false)
+            .catch(() => {})
         },
         signOut() {
             AuthenticationService.signOut();

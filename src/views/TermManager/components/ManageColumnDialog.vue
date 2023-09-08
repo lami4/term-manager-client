@@ -118,7 +118,7 @@ export default {
             });
         },
         mapper(reorderableItems) {
-            return reorderableItems.map(item => new ColumnDropdownOption({columnId: this.selectedColumn.id ,...item}));
+            return reorderableItems.map(item => new ColumnDropdownOption({columnId: this.selectedColumn?.id,...item}));
         }
     }
 }

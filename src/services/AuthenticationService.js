@@ -16,6 +16,15 @@ export default {
                 store.dispatch('Session/setPrivileges', response.data.privileges);
                 WS.connect(this.subscriberCallback);
                 return response;
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    showNotification(NotificationType.ERROR, "Wrong credentials!");
+                }
+                if (error.response.status === 403) {
+                    showNotification(NotificationType.ERROR, "Your user account is blocked!");
+                }
+                return Promise.reject(error);
             });
     },
     signOut() {
