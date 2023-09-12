@@ -3,6 +3,9 @@ import VueRouter from 'vue-router'
 import TermManager from '../views/TermManager/TermManager'
 import UserManager from "../views/UserManager/UserManager";
 import SuggestionManager from "../views/SuggestionManager/SuggestionManager";
+import store from '../store';
+import {showNotification} from "../helpers/GenericHelper";
+import NotificationType from '../components/Notificater/domain/NotificationType';
 
 Vue.use(VueRouter)
 
@@ -19,12 +22,28 @@ const routes = [
   {
     path: '/users',
     name: 'UserManager',
-    component: UserManager
+    component: UserManager,
+    beforeEnter: (to, from, next) => {
+      if (store.state.Session.userPrivileges.includes(1)) {
+        next();
+        return;
+      }
+      showNotification(NotificationType.ERROR, "You have no access to the page and were redirected to Terms")
+      next("/terms");
+    },
   },
   {
     path: '/suggestions',
     name: 'SuggestionManager',
-    component: SuggestionManager
+    component: SuggestionManager,
+    beforeEnter: (to, from, next) => {
+      if (store.state.Session.userPrivileges.includes(4)) {
+        next();
+        return;
+      }
+      showNotification(NotificationType.ERROR, "You have no access to the page and were redirected to Terms")
+      next("/terms");
+    },
   }
 ]
 

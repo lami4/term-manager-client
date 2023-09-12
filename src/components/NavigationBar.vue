@@ -71,7 +71,9 @@ export default {
             .catch(() => {})
         },
         signOut() {
-            AuthenticationService.signOut();
+            AuthenticationService.signOut().finally(() => {
+                this.$router.push({path: '/terms'}).catch(() => console.log("Already redirected"))
+            });
         }
     }
 }
