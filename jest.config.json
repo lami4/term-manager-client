@@ -12,5 +12,6 @@
         "^@/(.*)$": "<rootDir>/src/$1"
     },
     "testEnvironment": "jsdom",
-    "setupFiles":  ["<rootDir>/src/tests/index.js"]
+    "setupFiles":  ["<rootDir>/src/tests/index.js"],
+    "transformIgnorePatterns": ["/node_modules/(?!vee-validate/dist/rules)"]
 }
