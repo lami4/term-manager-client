@@ -50,7 +50,7 @@
 import BaseDialog from "../../../components/BaseDialog";
 import ReorderableList from "../../../components/SortableList/ReorderableList";
 import Column from "../domain/Column.js"
-import ElementType from "../../TermManager/domain/ElementType";
+import ElementType from "../domain/ElementType";
 import {mapActions, mapState} from "vuex";
 import ColumnDropdownOption from "../domain/ColumnDropdownOption";
 export default {
@@ -76,7 +76,7 @@ export default {
         }
     },
     computed: {
-        ...mapState('TermManager', {
+        ...mapState('TermGridSettings', {
             selectedColumn: "selectedColumn",
             columns: "columns",
         }),
@@ -106,7 +106,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('TermManager', {
+        ...mapActions('TermGridSettings', {
             addColumnAction: 'addColumn',
             updateColumnAction: 'updateColumn'
         }),

@@ -45,6 +45,11 @@ export default {
                     link: '/suggestions',
                     requiredPrivilege: SystemPrivileges.SUGGESTION_MANAGER
                 },
+                {
+                    label: "Term grid settings",
+                    link: '/term-grid-settings',
+                    requiredPrivilege: SystemPrivileges.TERM_GRID_MANAGER
+                },
             ],
         }
     },

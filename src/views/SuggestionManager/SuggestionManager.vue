@@ -42,7 +42,7 @@ import ManageTermDialog from '../TermManager/components/ManageTermDialog';
 import YesNoDialogBox from '../../components/YesNoDialog';
 import {mapActions, mapState} from 'vuex';
 import SuggestionManagerService from "../../services/SuggestionManagerService";
-import TermGridService from "../../services/TermGridService";
+import TermGridSettingsService from "../../services/TermGridSettingsService";
 export default {
     name: 'SuggestionManager',
     components: {
@@ -62,7 +62,7 @@ export default {
             selectedSuggestion: 'selectedSuggestion',
             suggestions: 'suggestions'
         }),
-        ...mapState('TermManager', {
+        ...mapState('TermGridSettings', {
             columns: 'columns'
         }),
         isAnyNodeSelected() {
@@ -88,7 +88,7 @@ export default {
     },
     mounted() {
         SuggestionManagerService.getSuggestions();
-        TermGridService.getColumns();
+        TermGridSettingsService.getColumns();
     }
 }
 </script>

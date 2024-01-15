@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import TermManager from '../views/TermManager/TermManager'
 import UserManager from "../views/UserManager/UserManager";
 import SuggestionManager from "../views/SuggestionManager/SuggestionManager";
+import TermGridSettings from "../views/TermGridSettings/TermGridSettings";
 import store from '../store';
 import {showNotification} from "../helpers/GenericHelper";
 import NotificationType from '../components/Notificater/domain/NotificationType';
@@ -44,7 +45,20 @@ const routes = [
       showNotification(NotificationType.ERROR, "You have no access to the page and were redirected to Terms")
       next("/terms");
     },
-  }
+  },
+  {
+    path: '/term-grid-settings',
+    name: 'TermGridSettings',
+    component: TermGridSettings,
+    beforeEnter: (to, from, next) => {
+      if (store.state.Session.userPrivileges.includes(3)) {
+        next();
+        return;
+      }
+      showNotification(NotificationType.ERROR, "You have no access to the page and were redirected to Terms")
+      next("/terms");
+    },
+  },
 ]
 
 const router = new VueRouter({

@@ -5,6 +5,7 @@ import * as UserManager from "./modules/UserManager.js";
 import * as TermManager from "./modules/TermManager.js";
 import * as SuggestionManager from "./modules/SuggestionManager.js";
 import * as Session from "./modules/Session.js";
+import * as TermGridSettings from "./modules/TermGridSettings.js";
 export const namespaced = true
 
 Vue.use(Vuex)
@@ -15,7 +16,8 @@ export default new Vuex.Store({
     UserManager,
     TermManager,
     SuggestionManager,
-    Session
+    Session,
+    TermGridSettings
   },
   state: {},
   mutations: {},

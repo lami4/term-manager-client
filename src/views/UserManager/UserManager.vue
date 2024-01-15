@@ -2,10 +2,7 @@
     <div class="user-manager-wrp">
         <Toolbar
             class="user-manager__toolbar"
-            :mode="'custom'"
-            @create="onCreateUserClick()"
-            @edit="onEditUserClick()"
-            @delete="onDeleteUserClick()">
+            :mode="'custom'">
             <BaseButton
                 class="base-button--xs toolbar__base-button--default"
                 @click="onCreateUserClick()"
@@ -14,17 +11,17 @@
                 class="base-button--xs toolbar__base-button--default"
                 @click="onEditUserClick()"
                 label="Edit"
-                :disabled="!isAnyNodeSelected"/>
+                :disabled="!isAnyRowSelected"/>
             <BaseButton
                 class="base-button--xs toolbar__base-button--default"
                 @click="onDeleteUserClick()"
                 label="Delete"
-                :disabled="!isAnyNodeSelected"/>
+                :disabled="!isAnyRowSelected"/>
             <BaseButton
                 class="base-button--xs toolbar__base-button--default"
                 @click="onResetPasswordClick()"
                 label="Reset password"
-                :disabled="!isAnyNodeSelected"/>
+                :disabled="!isAnyRowSelected"/>
         </Toolbar>
         <BaseGrid
             :columns="columns"
@@ -93,8 +90,6 @@ export default {
                     name: 'Status',
                 },
             ],
-            title: '',
-            message: '',
             showYesNoDialog: false,
             showManageUserDialog: false,
             showResetPasswordDialog: false,
@@ -106,7 +101,7 @@ export default {
             selectedUser: 'selectedUser',
             users: 'users'
         }),
-        isAnyNodeSelected() {
+        isAnyRowSelected() {
             return !!this.selectedUser;
         }
     },

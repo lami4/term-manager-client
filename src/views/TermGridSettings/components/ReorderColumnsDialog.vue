@@ -40,7 +40,7 @@ export default {
         }
     },
     computed: {
-        ...mapState('TermManager', {
+        ...mapState('TermGridSettings', {
             columns: "columns"
         })
     },

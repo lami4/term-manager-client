@@ -71,8 +71,10 @@ export default {
     },
     computed: {
         ...mapState('TermManager', {
-            selectedTerm: 'selectedTerm',
-            columns: "columns",
+            selectedTerm: 'selectedTerm'
+        }),
+        ...mapState('TermGridSettings', {
+            columns: "columns"
         }),
         ...mapState('SuggestionManager', {
             selectedSuggestion: "selectedSuggestion"

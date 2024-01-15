@@ -28,30 +28,6 @@
                 <img src="../assets/icons/report_mistake.svg">
             </BaseButton>
         </div>
-        <div class="toolbar__section" v-if="showColumnSection">
-            <BaseButton class="base-button--xs base-button--no-right-border toolbar__base-button--icon"
-                        @click="$emit('create-column-click')"
-                        v-tooltip="'Create new column'">
-                <img src="../assets/icons/add_column.svg">
-            </BaseButton>
-            <BaseButton class="base-button--xs base-button--no-right-border toolbar__base-button--icon"
-                        :disabled="!selectedColumn"
-                        @click="$emit('edit-column-click')"
-                        v-tooltip="'Edit column'">
-                <img src="../assets/icons/edit_column.svg">
-            </BaseButton>
-            <BaseButton class="base-button--xs base-button--no-right-border toolbar__base-button--icon"
-                        :disabled="!selectedColumn"
-                        @click="$emit('delete-column-click')"
-                        v-tooltip="'Delete column'">
-                <img src="../assets/icons/delete_column.svg">
-            </BaseButton>
-            <BaseButton class="base-button--xs toolbar__base-button--icon"
-                        @click="$emit('reorder-columns-click')"
-                        v-tooltip="'Reorder columns'">
-                <img style="transform: rotate(90deg);" src="../assets/icons/reorder_columns.svg">
-            </BaseButton>
-        </div>
       </template>
       <template v-if="mode === 'default-crud'">
         <div class="toolbar-section">
@@ -112,12 +88,8 @@ export default {
             selectedColumn: 'selectedColumn'
         }),
         ...mapState('Session', {
-            isSignedIn: 'isSignedIn',
             userPrivileges: 'userPrivileges'
         }),
-        showColumnSection() {
-            return this.userPrivileges.includes(SystemPrivileges.TERM_GRID_MANAGER);
-        },
         showTermCrudButtons() {
             return this.userPrivileges.includes(SystemPrivileges.TERM_MANAGER);
         }

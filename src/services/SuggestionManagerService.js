@@ -1,5 +1,5 @@
 import httpClient from "./HttpClient";
-import TermGridService from "./TermGridService";
+import TermManagerService from "./TermManagerService";
 import {handleError, showNotification} from "../helpers/GenericHelper";
 import store from '../store/index';
 import NotificationType from "../components/Notificater/domain/NotificationType";
@@ -55,7 +55,7 @@ export default {
             .then(() => {
                 showNotification(NotificationType.SUCCESS, 'Suggestion was successfully accepted');
                 store.dispatch('SuggestionManager/updateSelectedSuggestion', null);
-                TermGridService.getTerms();
+                TermManagerService.getTerms();
                 this.getSuggestions();
             })
             .catch(error => {

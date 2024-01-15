@@ -6,7 +6,7 @@ import NotificationType from "../components/Notificater/domain/NotificationType"
 import SystemPrivileges from "../views/UserManager/domain/SystemPrivileges";
 import Action from "./domain/Action";
 import SuggestionManagerService from "./SuggestionManagerService";
-import TermGridService from "./TermGridService";
+import TermManagerService from "./TermManagerService";
 
 export default {
     signIn(credentials) {
@@ -57,7 +57,7 @@ export default {
             showNotification(NotificationType.SUCCESS, "New suggestion");
         }
         if (message.action === Action.ADD_TERM) {
-            TermGridService.getTerms();
+            TermManagerService.getTerms();
             if (store.state.notification.ignoreNextWsMessage) {
                 store.dispatch('notification/setIgnoreNextWsMessage', false);
                 return;

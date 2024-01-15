@@ -6,20 +6,12 @@
             @create-term-click="onCreateTermClick()"
             @edit-term-click="onEditTermClick()"
             @delete-term-click="onDeleteTermClick()"
-            @suggest-term-click="onSuggestTermClick()"
-            @create-column-click="onCreateColumnClick()"
-            @edit-column-click="onEditColumnClick()"
-            @delete-column-click="onDeleteColumnClick()"
-            @reorder-columns-click="onReorderColumnsClick()"/>
+            @suggest-term-click="onSuggestTermClick()"/>
         <BaseGrid
             :columns="columns"
             :entries="terms"
             @select-entry="updateSelectedTerm($event)"
-            @unselect-entry="updateSelectedTerm($event)"
-            @select-column="updateSelectedColumn($event)"
-            @unselect-column="updateSelectedColumn($event)"
-            :is-column-select-enabled="isColumnsSelectable"
-            :is-column-unselect-enabled="isColumnsSelectable"/>
+            @unselect-entry="updateSelectedTerm($event)"/>
         <ManageTermDialog
             :show="showManageTermDialog"
             :is-create="isCreate"
@@ -28,48 +20,33 @@
             @edit-term="onEditTerm($event)"
             @suggest-term="onSuggestTerm($event)"
             @close="showManageTermDialog = false"/>
-        <ManageColumnDialog
-            :show="showManageColumnDialog"
-            :is-create="isCreate"
-            @create-column="onCreateColumn($event)"
-            @edit-column="onEditColumn($event)"
-            @close="showManageColumnDialog = false"/>
-        <ReorderColumnsDialog
-            :show="showReorderColumnsDialog"
-            @close="showReorderColumnsDialog = false"
-            @reorder-columns="onReorderColumns($event)"/>
         <YesNoDialogBox
-            :title="yesNoDialogTitle"
-            :message="yesNoDialogMessage"
+            title="Delete term"
+            message="Are you sure you want to delete the selected term?"
             :show="showYesNoDialog"
+            event-name="delete-term"
             @close="showYesNoDialog = false"
-            :event-name="yesNoDialogEvent"
-            @delete-term="onDeleteTerm()"
-            @delete-column="onDeleteColumn()"/>
+            @delete-term="onDeleteTerm()"/>
         </div>
 </template>
 
 <script>
-import Toolbar from '../../components/Toolbar.vue';
+import Toolbar from '../../components/Toolbar';
 import BaseGrid from '../../components/BaseGrid.vue';
-import ManageColumnDialog from './components/ManageColumnDialog.vue';
 import ManageTermDialog from './components/ManageTermDialog.vue';
 import YesNoDialogBox from '../../components/YesNoDialog.vue';
 import AuthenticationService from '../../services/AuthenticationService';
-import ReorderColumnsDialog from './components/ReorderColumnsDialog';
-import TermGridService from '../../services/TermGridService';
+import TermManagerService from '../../services/TermManagerService';
 import SuggestionManagerService from '../../services/SuggestionManagerService';
 import {mapActions, mapState} from 'vuex';
-import SystemPrivileges from "../UserManager/domain/SystemPrivileges";
+import TermGridSettingsService from '../../services/TermGridSettingsService';
 
 export default {
     name: 'TermManager',
     components: {
         BaseGrid,
         Toolbar,
-        ManageColumnDialog,
         ManageTermDialog,
-        ReorderColumnsDialog,
         YesNoDialogBox
     },
     data() {
@@ -77,32 +54,21 @@ export default {
             showYesNoDialog: false,
             showManageTermDialog: false,
             manageTermDialogMode: 'default',
-            showManageColumnDialog: false,
-            showReorderColumnsDialog: false,
-            isCreate: true,
-            yesNoDialogEvent: '',
-            yesNoDialogTitle: '',
-            yesNoDialogMessage: ''
+            isCreate: true
         }
     },
     computed: {
         ...mapState('TermManager', {
             selectedTerm: 'selectedTerm',
-            selectedColumn: 'selectedColumn',
-            columns: 'columns',
             terms: 'terms'
         }),
-        ...mapState('Session', {
-            userPrivileges: 'userPrivileges'
-        }),
-        isColumnsSelectable() {
-            return this.userPrivileges.includes(SystemPrivileges.TERM_GRID_MANAGER);
-        }
+        ...mapState('TermGridSettings', {
+            columns: 'columns'
+        })
     },
     methods: {
         ...mapActions('TermManager', {
-            updateSelectedTerm: 'updateSelectedTerm',
-            updateSelectedColumn: 'updateSelectedColumn'
+            updateSelectedTerm: 'updateSelectedTerm'
         }),
         onCreateTermClick() {
             this.manageTermDialogMode = 'default';
@@ -115,9 +81,6 @@ export default {
             this.showManageTermDialog = true;
         },
         onDeleteTermClick() {
-            this.yesNoDialogEvent = 'delete-term';
-            this.yesNoDialogTitle = 'Delete term';
-            this.yesNoDialogMessage = 'Are you sure you want to delete the selected term?'
             this.showYesNoDialog = true;
         },
         onSuggestTermClick() {
@@ -125,51 +88,22 @@ export default {
             this.isCreate = true;
             this.showManageTermDialog = true;
         },
-        onCreateColumnClick() {
-            this.isCreate = true;
-            this.showManageColumnDialog = true;
-        },
-        onEditColumnClick() {
-            this.isCreate = false;
-            this.showManageColumnDialog = true;
-        },
-        onDeleteColumnClick() {
-            this.yesNoDialogEvent = 'delete-column';
-            this.yesNoDialogTitle = 'Delete column';
-            this.yesNoDialogMessage = 'Are you sure you want to delete the selected column?'
-            this.showYesNoDialog = true;
-        },
-        onReorderColumnsClick() {
-            this.showReorderColumnsDialog = true;
-        },
         onCreateTerm(term) {
-            TermGridService.addTerm(term).then(() => this.showManageTermDialog = false);
+            TermManagerService.addTerm(term).then(() => this.showManageTermDialog = false);
         },
         onEditTerm(term) {
-            TermGridService.updateTerm(term).then(() => this.showManageTermDialog = false);
+            TermManagerService.updateTerm(term).then(() => this.showManageTermDialog = false);
         },
         onSuggestTerm(suggestion) {
             SuggestionManagerService.addSuggestion(suggestion).then(() => this.showManageTermDialog = false);
         },
         onDeleteTerm() {
-            TermGridService.deleteTerm(this.selectedTerm);
+            TermManagerService.deleteTerm(this.selectedTerm);
         },
-        onCreateColumn(column) {
-            TermGridService.addColumn(column).then(() => this.showManageColumnDialog = false);
-        },
-        onEditColumn(column) {
-            TermGridService.updateColumn(column).then(() => this.showManageColumnDialog = false);
-        },
-        onDeleteColumn() {
-            TermGridService.deleteColumn(this.selectedColumn);
-        },
-        onReorderColumns(reorderSettings) {
-            TermGridService.reorderColumns(reorderSettings).then(() => this.showReorderColumnsDialog = false);
-        }
     },
     mounted() {
-        TermGridService.getTerms();
-        TermGridService.getColumns();
+        TermManagerService.getTerms();
+        TermGridSettingsService.getColumns();
     },
     beforeCreate() {
         AuthenticationService.validateSession();
