@@ -10,8 +10,7 @@
         <BaseGrid
             :columns="columns"
             :entries="terms"
-            @select-entry="updateSelectedTerm($event)"
-            @unselect-entry="updateSelectedTerm($event)"/>
+            @select-entry="updateSelectedTerm($event)"/>
         <ManageTermDialog
             :show="showManageTermDialog"
             :is-create="isCreate"

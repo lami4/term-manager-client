@@ -7,7 +7,7 @@ import TermGridSettings from "../views/TermGridSettings/TermGridSettings";
 import store from '../store';
 import {showNotification} from "../helpers/GenericHelper";
 import NotificationType from '../components/Notificater/domain/NotificationType';
-
+import AuthenticationService from '../services/AuthenticationService';
 Vue.use(VueRouter)
 
 const routes = [
@@ -24,7 +24,10 @@ const routes = [
     path: '/users',
     name: 'UserManager',
     component: UserManager,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
+      if (from.name === null) {
+        await AuthenticationService.validateSession();
+      } 
       if (store.state.Session.userPrivileges.includes(1)) {
         next();
         return;
@@ -37,7 +40,10 @@ const routes = [
     path: '/suggestions',
     name: 'SuggestionManager',
     component: SuggestionManager,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
+      if (from.name === null) {
+        await AuthenticationService.validateSession();
+      } 
       if (store.state.Session.userPrivileges.includes(4)) {
         next();
         return;
@@ -50,7 +56,10 @@ const routes = [
     path: '/term-grid-settings',
     name: 'TermGridSettings',
     component: TermGridSettings,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
+      if (from.name === null) {
+        await AuthenticationService.validateSession();
+      }
       if (store.state.Session.userPrivileges.includes(3)) {
         next();
         return;

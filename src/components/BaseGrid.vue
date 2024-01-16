@@ -1,12 +1,11 @@
 <template>
     <div class="grid-wrapper">
         <table class="base-grid">
-            <thead :class="['base-grid__header', {'selectable': isColumnSelectEnabled}]">
+            <thead class="base-grid__header">
             <tr>
                 <th v-for="column in columns"
                     :key="column.id"
-                    :data-column-id="column.htmlId"
-                    @click="selectColumn($event, column)">
+                    :data-column-id="column.htmlId">
                     <slot name="headerCell" v-bind:column="column">
                         {{column.name}}
                     </slot>
@@ -18,7 +17,9 @@
                 :key="entry.id"
                 :data-entry-id="entry.id"
                 @click="selectEntry($event, entry)">
-                <td v-for="column in columns" :key="column.id" :data-column-id="column.htmlId">
+                <td v-for="column in columns" 
+                    :key="column.id" 
+                    :data-column-id="column.htmlId">
                     <slot name="bodyCell" v-bind:value="entry">
                         {{cellRenderer(column, entry)}}
                     </slot>
@@ -52,21 +53,10 @@ export default {
             type: Boolean,
             default: false
         },
-        isColumnSelectEnabled: {
-            required: false,
-            type: Boolean,
-            default: false
-        },
-        isColumnUnselectEnabled: {
-            required: false,
-            type: Boolean,
-            default: false
-        },
     },
     data() {
         return {
-            selectedTr: null,
-            selectedTh: null,
+            selectedTr: null
         }
     },
     computed: {
@@ -82,10 +72,6 @@ export default {
         selectEntry(event, term) {
             if (this.isRowSelectEnabled) {
                 const tr = event.target.parentNode;
-                if (this.selectedTh) {
-                    this.selectedTh.classList.remove("selected-column");
-                    this.selectedTh = null;
-                }
                 if (this.selectedTr === tr) {
                     if (!this.isRowUnselectEnabled) return;
                     this.selectedTr.classList.remove("selected-row");
@@ -102,35 +88,6 @@ export default {
                     this.selectedTr.classList.toggle("selected-row");
                 }
                 this.$emit('select-entry', term);
-                if (this.isColumnSelectEnabled) {
-                    this.$emit('unselect-column', null);
-                }
-            }
-        },
-        selectColumn(event, column) {
-            if (this.isColumnSelectEnabled) {
-                const th = event.target
-                if (this.selectedTr) {
-                    this.selectedTr.classList.remove("selected-row");
-                    this.selectedTr = null;
-                }
-                if (this.selectedTh === th) {
-                    if (!this.isColumnUnselectEnabled) return;
-                    this.selectedTh.classList.remove("selected-column");
-                    this.selectedTh = null;
-                    this.$emit('select-column', null);
-                    return;
-                }
-                if (this.selectedTh && this.selectedTh !== th) {
-                    this.selectedTh.classList.remove("selected-column");
-                    this.selectedTh = th;
-                    this.selectedTh.classList.toggle("selected-column");
-                } else {
-                    this.selectedTh = th;
-                    this.selectedTh.classList.toggle("selected-column");
-                }
-                this.$emit('unselect-entry', null);
-                this.$emit('select-column', column);
             }
         },
         cellRenderer(column, entry) {
