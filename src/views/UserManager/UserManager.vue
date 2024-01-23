@@ -26,6 +26,7 @@
         <BaseGrid
             :columns="columns"
             :entries="users"
+            :is-column-resizing-enabled="true"
             @select-entry="updateSelectedUser($event)">
         </BaseGrid>
         <ManageUserDialog
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-import BaseGrid from '../../components/BaseGrid.vue';
+import BaseGrid from '../../components/BaseGrid/BaseGrid.vue';
 import YesNoDialogBox from '../../components/YesNoDialog';
 import Toolbar from '../../components/Toolbar';
 import {mapActions, mapState} from 'vuex';
@@ -72,7 +73,7 @@ export default {
                 {
                     htmlId: 'firstName',
                     id: 1,
-                    name: 'First name',
+                    name: 'First name long totle',
                 },
                 {
                     htmlId: 'lastName',

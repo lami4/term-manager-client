@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import BaseGrid from '../../components/BaseGrid.vue';
+import BaseGrid from '../../components/BaseGrid/BaseGrid.vue';
 import YesNoDialogBox from '../../components/YesNoDialog';
 import Toolbar from '../../components/Toolbar';
 import {mapActions, mapState} from 'vuex';

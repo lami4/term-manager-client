@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import BaseGrid from '../../components/BaseGrid.vue';
+import BaseGrid from '../../components/BaseGrid/BaseGrid.vue';
 import Toolbar from '../../components/Toolbar';
 import ManageTermDialog from '../TermManager/components/ManageTermDialog';
 import YesNoDialogBox from '../../components/YesNoDialog';

@@ -10,6 +10,8 @@
         <BaseGrid
             :columns="columns"
             :entries="terms"
+            display-mode="overflow"
+            :is-column-resizing-enabled="true"
             @select-entry="updateSelectedTerm($event)"/>
         <ManageTermDialog
             :show="showManageTermDialog"
@@ -31,7 +33,7 @@
 
 <script>
 import Toolbar from '../../components/Toolbar';
-import BaseGrid from '../../components/BaseGrid.vue';
+import BaseGrid from '../../components/BaseGrid/BaseGrid.vue';
 import ManageTermDialog from './components/ManageTermDialog.vue';
 import YesNoDialogBox from '../../components/YesNoDialog.vue';
 import AuthenticationService from '../../services/AuthenticationService';
