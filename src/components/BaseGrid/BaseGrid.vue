@@ -1,6 +1,8 @@
 <template>
     <div :class="['grid-wrapper', {'grid-wrapper--overflow': isOverflowDisplayMode}]">
-        <table :class="['base-grid', {'base-grid--fit': isFitDisplayMode, 'base-grid--overflow': isOverflowDisplayMode}]">
+        <table 
+            ref="table"
+            :class="['base-grid', {'base-grid--fit': isFitDisplayMode, 'base-grid--overflow': isOverflowDisplayMode}]">
             <thead class="base-grid__header">
                 <tr>
                     <th v-for="column in columns"
@@ -10,7 +12,7 @@
                         <slot name="headerCell" v-bind:column="column">
                             {{column.name}}
                         </slot>
-                        <div :class="['base-grid__resizer']" 
+                        <div :class="['base-grid__column-resizer']" 
                             v-if="isColumnResizingEnabled" 
                             @mousedown.stop="startColumnResize($event)"></div>
                     </th>
@@ -31,6 +33,7 @@
                 </tr>
             </tbody>
         </table>
+        <div ref="column-resizer-line" class="base-grid__column-resizer-line"></div>
     </div>
 </template>
 
@@ -132,41 +135,69 @@ export default {
                 this.resizeColumnInOverflowMode(event);
             }
         },
+        initColumnResizerLine(context) {
+            context.columnResizerLine.style.display = 'block';
+            context.columnResizerLine.style.top = 0;
+            context.columnResizerLine.style.left = (context.initialMousePosition - context.tableSizeAndPositioningInfo.x) + 'px';
+            context.columnResizerLine.style.height = context.tableSizeAndPositioningInfo.height + 'px';
+        },
         resizeColumnInFitMode(event) {
             //THE TABLE MUST MEET THE FOLLOWING CONDITIONS TO BE ABLE TO RESIZED IN THIS MODE:
             //1. table must have width: 100%; and table-layout: fixed;
             //2. you can play with overflow: hidden; white-space: nowrap; (must be placed on th and td)
             //to control the way overlflow is working
+            const table = this.$refs['table'];
             const column = event.target.parentNode;
             const neighbourColumn = column.nextSibling;
             const context = {
+                tableSizeAndPositioningInfo: table.getBoundingClientRect(),
+                columnResizerLine: this.$refs['column-resizer-line'],
+                columnResizerLinePosition: null,
                 column,
-                neighbourColumn,
-                initialMousePosition: event.clientX,
                 initialColumnWidth: column.offsetWidth,
+                neighbourColumn,
                 initialNeighbourColumnWidth: neighbourColumn.offsetWidth,
+                initialMousePosition: event.clientX,
                 allowedMousePositionLeftOffset: event.clientX - (column.offsetWidth - this.columnMinWidth),
                 allowedMousePositionRightOffset: event.clientX + (neighbourColumn.offsetWidth - this.columnMinWidth)
             }
 
-            function resizeColumn(event, context) {
-                if (context.allowedMousePositionLeftOffset > event.clientX || event.clientX > context.allowedMousePositionRightOffset)  return;
-                const mousePositionOffset = event.clientX - context.initialMousePosition;
-                context.column.style.width = (context.initialColumnWidth + mousePositionOffset) + 'px';
-                context.neighbourColumn.style.width = (context.initialNeighbourColumnWidth - mousePositionOffset) + 'px';
-            };
+            //show column resizer
+            this.initColumnResizerLine(context);
 
             //create handlers
-            const onMouseMoveHandler = this.throttleEvent(resizeColumn, context);
-            const mouseUpHandler = function () {
-                event.target.classList.remove('resizing');
-                document.removeEventListener('mousemove', onMouseMoveHandler);
-                document.removeEventListener('mouseup', mouseUpHandler);
-            };
+            const onMouseMoveHandler = this.throttleEvent(moveColumnResizerLine, context);
+            const mouseUpHandler = event => applyColumnResizing(event, context);
+
             //create listeners
             document.addEventListener('mousemove', onMouseMoveHandler);
             document.addEventListener('mouseup', mouseUpHandler);
-            event.target.classList.add('resizing');
+
+            //hide column resize line and remove listeners
+            function terminateColumnResize() {
+                context.columnResizerLine.style.display = 'none';
+                document.removeEventListener('mousemove', onMouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
+            }
+
+            //function responsible for moving the column resizer on the mouse-move event
+            function moveColumnResizerLine(event, context) {
+                if (context.allowedMousePositionLeftOffset > event.clientX || event.clientX > context.allowedMousePositionRightOffset) return;
+                context.columnResizerLinePosition = event.clientX - context.tableSizeAndPositioningInfo.x;
+                context.columnResizerLine.style.left = context.columnResizerLinePosition + 'px';
+            }
+
+            //function responsible for applying the column resizing on the mouse-up event
+            function applyColumnResizing(event, context) {
+                if (context.initialMousePosition === event.clientX) {
+                    terminateColumnResize();
+                    return;
+                }
+                const mousePositionOffset = context.columnResizerLinePosition + context.tableSizeAndPositioningInfo.x - context.initialMousePosition;
+                context.column.style.width = (context.initialColumnWidth + mousePositionOffset) + 'px';
+                context.neighbourColumn.style.width = (context.initialNeighbourColumnWidth - mousePositionOffset) + 'px';
+                terminateColumnResize();
+            };
         },
         resizeColumnInOverflowMode(event) {
             //THE TABLE MUST MEET THE FOLLOWING CONDITIONS TO BE ABLE TO RESIZED IN THIS MODE:
@@ -175,39 +206,58 @@ export default {
             //if max-content is not supported by browser, resize table width -> context.table.style.width = (context.initialTableWidth + mousePositionOffset) + 'px';
             //3. th must have inline width attribute
             //4. you must set width and max-width on all cells with the given id
-            const table = event.target.closest('table');
+            const table = this.$refs['table'];
             const column = event.target.parentNode;
             const context = {
-                column,
                 table,
-                initialMousePosition: event.clientX,
-                initialTableWidth: table.offsetWidth,
+                tableSizeAndPositioningInfo: table.getBoundingClientRect(),
+                columnResizerLine: this.$refs['column-resizer-line'],
+                columnResizerLinePosition: null,
+                column,
                 initialColumnWidth: column.offsetWidth,
+                initialMousePosition: event.clientX,
                 allowedMousePositionLeftOffset: event.clientX - (column.offsetWidth - this.columnMinWidth)
             }
-            function resizeColumn(event, context) {
-                if (context.allowedMousePositionLeftOffset > event.clientX) return;
-                const mousePositionOffset = event.clientX - context.initialMousePosition;
-                const delta = (context.initialColumnWidth + mousePositionOffset) + 'px';
-                const cells = context.table.querySelectorAll(`[data-column-id=${context.column.getAttribute('data-column-id')}]`);
-                for (let i = 0; i < cells.length; i++) {
-                    cells[i].style.width = delta;
-                    cells[i].style.maxWidth = delta;
-                }
-            };
+            
+            //show column resizer
+            this.initColumnResizerLine(context);
 
             //create handlers
-            const onMouseMoveHandler = this.throttleEvent(resizeColumn, context);
-            const mouseUpHandler = function () {
-                event.target.classList.remove('base-grid__resizer--resizing');
-                document.removeEventListener('mousemove', onMouseMoveHandler);
-                document.removeEventListener('mouseup', mouseUpHandler);
-            };
+            const onMouseMoveHandler = this.throttleEvent(moveColumnResizerLine, context);
+            const mouseUpHandler = event => applyColumnResizing(event, context);
+
             //create listeners
             document.addEventListener('mousemove', onMouseMoveHandler);
             document.addEventListener('mouseup', mouseUpHandler);
-            event.target.classList.add('base-grid__resizer--resizing');
+            
+            //function responsible for moving the column resizer on the mouse-move event
+            function moveColumnResizerLine(event, context) {
+                if (context.allowedMousePositionLeftOffset > event.clientX) return;
+                context.columnResizerLinePosition = event.clientX - context.tableSizeAndPositioningInfo.x;
+                context.columnResizerLine.style.left = context.columnResizerLinePosition + 'px';
+            }
 
+            //hide column resize line and remove listeners
+            function terminateColumnResize() {
+                context.columnResizerLine.style.display = 'none';
+                document.removeEventListener('mousemove', onMouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
+            }
+
+            function applyColumnResizing(event, context) {
+                if (context.initialMousePosition === event.clientX) {
+                    terminateColumnResize();
+                    return;
+                };
+                const mousePositionOffset = context.columnResizerLinePosition + context.tableSizeAndPositioningInfo.x - context.initialMousePosition;
+                const newWidth = (context.initialColumnWidth + mousePositionOffset) + 'px';
+                const cells = context.table.querySelectorAll(`[data-column-id=${context.column.getAttribute('data-column-id')}]`);
+                for (let i = 0; i < cells.length; i++) {
+                    cells[i].style.width = newWidth;
+                    cells[i].style.maxWidth = newWidth;
+                }
+                terminateColumnResize();
+            }
         },
         selectEntry(event, term) {
             if (this.isRowSelectEnabled) {
@@ -252,14 +302,14 @@ $header-bgc: #6f8faf;
 $base-selection-bgc: #e0e0e0;
 
 .grid-wrapper {
+    position: relative;
     &--overflow {
         overflow-x: auto;
     }
 }
 
 .base-grid {
-    border-collapse: separate;
-    border-spacing: 0px;
+    border-collapse: collapse;
     color: $grid-base-font-color;
     background-color: $grid-base-bgc;
     &--fit {
@@ -286,14 +336,14 @@ $base-selection-bgc: #e0e0e0;
         color: $header-font-color;
         & th {
             position: relative;
-            border: solid $header-bgc 3px;
-            &:last-child .base-grid__resizer {
+            border-right: solid $base-selection-bgc 1px;
+            &:last-child .base-grid__column-resizer {
                 display: none;
             }
         }
     }
 
-    &__resizer {
+    &__column-resizer {
         position: absolute;
         top: 0;
         right: 0;
@@ -301,18 +351,19 @@ $base-selection-bgc: #e0e0e0;
         cursor: col-resize;
         user-select: none;
         height: 100%;
-        border-right: 2px solid blue;
         box-sizing: border-box;
+    }
 
-        &:hover,
-        &--resizing {
-            border-right: 2px solid black;
-        }
+    &__column-resizer-line {
+        width: 1px;
+        position: absolute;
+        display: none;
+        background: $base-selection-bgc;
     }
 
     &__body {
         & td {
-            border-bottom: solid $base-selection-bgc 1px;
+            border: solid $base-selection-bgc 1px;
         }
 
         & tr {
