@@ -1,8 +1,7 @@
 export const namespaced = true
 
 export const state = {
-    notifications: [],
-    ignoreNextWsMessage: false
+    notifications: []
 }
 
 export const actions = {
@@ -11,9 +10,6 @@ export const actions = {
     },
     delete({commit}, notification) {
         commit('REMOVE', notification);
-    },
-    setIgnoreNextWsMessage({commit}, boolean) {
-        commit('SET_IGNORE_NEXT_WS_MESSAGE', boolean);
     }
 }
 
@@ -29,8 +25,5 @@ export const mutations = {
         state.notifications = state.notifications.filter(item => {
             return item.id !== notification.id;
         })
-    },
-    SET_IGNORE_NEXT_WS_MESSAGE(state, value) {
-        state.ignoreNextWsMessage = value;
     }
 }

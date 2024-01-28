@@ -5,6 +5,7 @@
           <router-view/>
       </keep-alive>
       <NotificationContainer/>
+      <SignInDialog/>
   </div>
 </template>
 
@@ -14,13 +15,15 @@ import UserManager from './views/UserManager/UserManager';
 import SuggestionManager from './views/SuggestionManager/SuggestionManager';
 import NotificationContainer from './components/Notificater/NotificationContainer';
 import NavigationBar from "./components/NavigationBar";
+import SignInDialog from './components/SignInDialog/SignInDialog.vue';
 export default {
     components: {
         TermManager,
         UserManager,
         SuggestionManager,
         NotificationContainer,
-        NavigationBar
+        NavigationBar,
+        SignInDialog
     }
 }
 </script>

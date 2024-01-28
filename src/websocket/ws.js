@@ -1,6 +1,7 @@
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import settings from '../settings';
+import store from '../store/index';
 var stompClient = null;
 
 export function connect(subscriberCallback) {
@@ -9,7 +10,8 @@ export function connect(subscriberCallback) {
     stompClient.debug = null;
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/incoming-notifications', subscriberCallback);
+        stompClient.subscribe('/general', subscriberCallback);
+        stompClient.subscribe(`/user/${store.state.Session.userId}/topic/test`, subscriberCallback);
     });
 }
 
@@ -21,5 +23,5 @@ export function disconnect() {
 }
 
 export function sendMessage(message) {
-    stompClient.send("/notifications", {}, JSON.stringify(message));
+    stompClient.send(`/table-resizing/${store.state.Session.userId}`, {}, 'hello');
 }

@@ -10,10 +10,12 @@ import TermManagerService from "./TermManagerService";
 
 export default {
     signIn(credentials) {
-        return httpClient.get('/auth/login', {headers: {...credentials}})
+        return httpClient.get('/auth/login', {headers: {email: encodeURI(credentials.email), password: encodeURI(credentials.password)}})
             .then(response => {
                 store.dispatch('Session/setIsSignedIn', true);
                 store.dispatch('Session/setPrivileges', response.data.privileges);
+                store.dispatch('Session/setUserEmail', response.data.userEmail);
+                store.dispatch('Session/setUserId', response.data.userId);
                 WS.connect(this.subscriberCallback);
                 return response;
             })
@@ -32,6 +34,8 @@ export default {
             .then(() => {
                 store.dispatch('Session/setIsSignedIn', false);
                 store.dispatch('Session/setPrivileges', []);
+                store.dispatch('Session/setUserEmail', null);
+                store.dispatch('Session/setUserId', null);
                 WS.disconnect();
             });
     },
@@ -40,6 +44,8 @@ export default {
             .then(response => {
                 store.dispatch('Session/setIsSignedIn', true);
                 store.dispatch('Session/setPrivileges', response.data.privileges);
+                store.dispatch('Session/setUserEmail', response.data.userEmail);
+                store.dispatch('Session/setUserId', response.data.userId);
                 WS.connect(this.subscriberCallback);
             })
             .catch(() => {
@@ -47,25 +53,19 @@ export default {
             });
     },
     subscriberCallback({ body: message }) {
-        message = JSON.parse(message);
-        if (message.action === Action.ADD_SUGGESTION && isUserSuggestionManager) {
-            SuggestionManagerService.getSuggestions();
-            if (store.state.notification.ignoreNextWsMessage) {
-                store.dispatch('notification/setIgnoreNextWsMessage', false);
-                return;
-            }
-            showNotification(NotificationType.SUCCESS, "New suggestion");
-        }
-        if (message.action === Action.ADD_TERM) {
-            TermManagerService.getTerms();
-            if (store.state.notification.ignoreNextWsMessage) {
-                store.dispatch('notification/setIgnoreNextWsMessage', false);
-                return;
-            }
-            showNotification(NotificationType.SUCCESS, "New term");
-        }
-        function isUserSuggestionManager() {
-            return store.state.Session.userPrivileges.includes(SystemPrivileges.SUGGESTION_MANAGER);
-        }
+        //message = JSON.parse(message);
+        console.log(message)
+        // if (message.action === Action.ADD_SUGGESTION && isUserSuggestionManager) {
+        //     SuggestionManagerService.getSuggestions();
+        //     showNotification(NotificationType.SUCCESS, "New suggestion");
+        // }
+        // if (message.action === Action.ADD_TERM) {
+        //     TermManagerService.getTerms();
+
+        //     showNotification(NotificationType.SUCCESS, "New term");
+        // }
+        // function isUserSuggestionManager() {
+        //     return store.state.Session.userPrivileges.includes(SystemPrivileges.SUGGESTION_MANAGER);
+        // }
     }
 }

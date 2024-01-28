@@ -22,6 +22,10 @@
                 @click="onResetPasswordClick()"
                 label="Reset password"
                 :disabled="!isAnyRowSelected"/>
+            <BaseButton
+                class="base-button--xs toolbar__base-button--default"
+                @click="clieckTest()"
+                label="Reset password"/>
         </Toolbar>
         <BaseGrid
             :columns="columns"
@@ -57,6 +61,7 @@ import {mapActions, mapState} from 'vuex';
 import UserManagerService from "../../services/UserManagerService";
 import ManageUserDialog from "./components/ManageUserDialog";
 import ResetPasswordDialog from "./components/ResetPasswordDialog";
+import * as WS from "../../websocket/ws";
 
 export default {
     name: 'UserManager',
@@ -135,6 +140,9 @@ export default {
         },
         onResetPasswordClick() {
             this.showResetPasswordDialog = true;
+        },
+        clieckTest() {
+            WS.sendMessage();
         }
     },
     mounted() {

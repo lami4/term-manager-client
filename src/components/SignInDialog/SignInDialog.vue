@@ -1,8 +1,8 @@
 <template>
     <BaseDialog
-        :show="show"
+        :show="showSignInDialog"
         title="Sign in"
-        @close="$emit('close')"
+        @close="closeDialog()"
         @submit="onSubmit()"
         submit-button-label="Sign in"
         :width="400"
@@ -24,38 +24,49 @@
 </template>
 
 <script>
-import BaseDialog from "../../../components/BaseDialog";
-import UserCredentials from "../domain/UserCredentials.js"
+import BaseDialog from "../BaseDialog.vue"
+import UserCredentials from "./domain/UserCredentials.js";
+import AuthenticationService from "../../services/AuthenticationService";
+import {mapActions, mapState} from "vuex";
+
 export default {
     name: "SignInDialog",
     components: {
         BaseDialog
-    },
-    props: {
-        show: {
-            type: Boolean,
-            required: true
-        }
     },
     data() {
         return {
             userCredentials: new UserCredentials()
         }
     },
-    methods: {
-        onSubmit() {
-            this.$refs.baseDialog.validate().then(isValid => {
-                if (isValid) {
-                    this.$emit('submit', this.userCredentials);
-                }
-            });
-        }
+    computed: {
+        ...mapState('Session', {
+            isSignedIn: 'isSignedIn',
+            showSignInDialog: 'showSignInDialog'
+        })
     },
     watch: {
-        show(newValue) {
+        showSignInDialog(newValue) {
             if (newValue) {
                 this.userCredentials = new UserCredentials();
             }
+        }
+    },
+    methods: {
+        ...mapActions('Session', {
+            setShowSignInDialog: 'setShowSignInDialog',
+        }),
+        onSubmit() {
+            this.$refs.baseDialog.validate().then(isValid => {
+                if (isValid) {
+                    AuthenticationService.signIn(this.userCredentials)
+                        .then(() => this.closeDialog())
+                        .catch(() => {})
+                }
+            });
+        },
+        closeDialog() {
+            this.setShowSignInDialog(false);
         }
     }
 }

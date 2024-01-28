@@ -9,26 +9,17 @@
                 @click="onButtonClick()"
                 :label="isSignedIn ? 'Sign out' : 'Sign in'"/>
         </div>
-        <SignInDialog
-            :show="showSignInDialog"
-            @submit="signIn($event)"
-            @close="showSignInDialog = false"/>
     </nav>
 </template>
 
 <script>
-import SignInDialog from "../views/TermManager/components/SignInDialog";
 import AuthenticationService from "../services/AuthenticationService";
-import {mapState} from "vuex";
+import {mapActions, mapState} from "vuex";
 import SystemPrivileges from "../views/UserManager/domain/SystemPrivileges";
 export default {
     name: "NavigationBar",
-    components: {
-        SignInDialog
-    },
     data() {
         return {
-            showSignInDialog: false,
             menuItems: [
                 {
                     label: "Users",
@@ -63,17 +54,15 @@ export default {
         }
     },
     methods: {
+        ...mapActions('Session', {
+            setShowSignInDialog: 'setShowSignInDialog',
+        }),
         onButtonClick() {
             if (this.isSignedIn) {
                 this.signOut();
             } else {
-                this.showSignInDialog = true;
+                this.setShowSignInDialog(true); 
             }
-        },
-        signIn(userCredentials) {
-            AuthenticationService.signIn(userCredentials)
-            .then(() => this.showSignInDialog = false)
-            .catch(() => {})
         },
         signOut() {
             AuthenticationService.signOut().finally(() => {
