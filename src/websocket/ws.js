@@ -11,7 +11,7 @@ export function connect(subscriberCallback) {
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/general', subscriberCallback);
-        stompClient.subscribe(`/user/${store.state.Session.userId}/topic/test`, subscriberCallback);
+        stompClient.subscribe(`/private/user/${store.state.Session.userId}/topic/test`, subscriberCallback);
     });
 }
 
